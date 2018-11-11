@@ -1,4 +1,4 @@
-package com.group26.termproject;
+package com.group26.termproject.tables;
 
 
 import lombok.Data;
@@ -9,14 +9,17 @@ import javax.persistence.Id;
 
 @Entity
 @Data
-public class Players {
+public class Player {
     private @Id @GeneratedValue Long id;
-    private String nick_name;
+    private String nickName;
     private String email;
     private String password;
 
-    Players(String nick_name, String email,String password ) {
-        this.nick_name = nick_name;
+    public Player() {
+    }
+
+    public Player(String nickName, String email, String password) {
+        this.nickName = nickName;
         this.email = email;
         this.password = password;
     }
