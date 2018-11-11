@@ -13,6 +13,9 @@ public class Authentication {
     private String token;
     private Long playerId;
 
+    public Authentication() {
+    }
+
     public Authentication(String token, Long playerId) {
         this.token = token;
         this.playerId = playerId;
