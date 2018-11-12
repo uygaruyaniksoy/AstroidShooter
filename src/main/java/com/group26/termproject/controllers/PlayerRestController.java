@@ -1,9 +1,6 @@
 package com.group26.termproject.controllers;
 
-import com.group26.termproject.dto.PlayerAuthenticationDTO;
-import com.group26.termproject.dto.PlayerChangePasswordDTO;
-import com.group26.termproject.dto.PlayerSignInDTO;
-import com.group26.termproject.dto.PlayerSignUpDTO;
+import com.group26.termproject.dto.*;
 import com.group26.termproject.repositories.AuthenticationRepository;
 import com.group26.termproject.repositories.PlayerRepository;
 import com.group26.termproject.tables.Authentication;
@@ -12,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.*;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -20,6 +16,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collection;
+import java.util.Optional;
 
 @RestController
 class PlayerRestController {
@@ -37,6 +34,16 @@ class PlayerRestController {
 			e.printStackTrace();
 			return;
 		}
+	}
+
+	@GetMapping("/players/{id}")
+	Optional<Player> getPlayer(@PathVariable Integer id) {
+		return playerRepository.findById(id);
+		//or else throw
+	}
+
+	Optional<Authentication> getToken(@PathVariable Integer id) {
+		return authenticationRepository.findById(id);
 	}
 
 	@GetMapping("/test")

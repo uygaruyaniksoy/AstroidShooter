@@ -12,8 +12,6 @@ public interface ScoreBoardRepository extends JpaRepository<ScoreBoard, Long> {
     @Query("select s.player.nickName, max(score) from ScoreBoard s where  s.date=CURRENT_DATE group by s.player.nickName")
     List<Tuple> getDailyLeaderboard();
 
-
-
     @Query("select s.player.nickName, max(score) from ScoreBoard s " +
             "where WEEK(s.date)=WEEK(CURRENT_DATE) and YEAR(CURRENT_DATE)=YEAR(s.date) " +
             "group by s.player.nickName")

@@ -15,7 +15,7 @@ public class ScoreBoard {
     private Date date;
     private int score;
 
-    ScoreBoard() {
+    public ScoreBoard() {
         player = new Player();
         date = null;
         score = -1;
