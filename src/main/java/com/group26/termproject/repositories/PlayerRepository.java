@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface PlayerRepository extends JpaRepository<Player,Integer> {
 //    public Player getByToken(String token);
     Optional<Player> findByEmailAndPassword(String email, String password);
+    Optional<Player> findByEmail(String email);
     @Query(value = "select * from player p, authentication a where a.token = ?1 and a.player_id = p.id", nativeQuery = true)
     Optional<Player> findByToken(String token);
 
