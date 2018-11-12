@@ -1,13 +1,11 @@
 package com.group26.termproject.controllers;
 
-import com.group26.termproject.dto.PlayerAuthenticationDTO;
-import com.group26.termproject.dto.PlayerChangePasswordDTO;
-import com.group26.termproject.dto.PlayerSignInDTO;
-import com.group26.termproject.dto.PlayerSignUpDTO;
+import com.group26.termproject.dto.*;
 import com.group26.termproject.repositories.AuthenticationRepository;
 import com.group26.termproject.repositories.PlayerRepository;
 import com.group26.termproject.tables.Authentication;
 import com.group26.termproject.tables.Player;
+import org.aspectj.apache.bcel.util.Play;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -57,7 +55,7 @@ class PlayerRestController {
 
 		Optional<Player> optionalPlayer = playerRepository.findByEmail(playerDTO.getEmail());
 
-		if (!optionalPlayer.isPresent()) return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+		if (optionalPlayer.isPresent()) return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 
 		Player player = new Player(playerDTO.getNickName(), playerDTO.getEmail(), passwordHash);
 		playerRepository.save(player);
@@ -102,5 +100,17 @@ class PlayerRestController {
 			return new ResponseEntity(HttpStatus.OK);
 		}
 		return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+	}
+
+	/**
+	 *
+	 * @param token
+	 * @return the player with the given authentication token
+	 */
+	@GetMapping(path = "/player/me/{token}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Player> me(@PathVariable String token) {
+		Player player = playerRepository.findByToken(token).orElse(null);
+
+		return new ResponseEntity<>(player, player != null ? HttpStatus.OK : HttpStatus.UNAUTHORIZED);
 	}
 }
