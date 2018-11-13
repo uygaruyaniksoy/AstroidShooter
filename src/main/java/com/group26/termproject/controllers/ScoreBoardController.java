@@ -45,6 +45,20 @@ public class ScoreBoardController {
 
     }
 
+    @GetMapping("/scoreboard")
+    ResponseEntity<List<LeaderBoardDTO>> scoreboard() {
+
+        List<Tuple> tuple_list = scoreBoardRepository.getLeaderboard();
+        List<LeaderBoardDTO> res = new ArrayList<>();
+
+        for(Tuple el:tuple_list) {
+            LeaderBoardDTO temp = new LeaderBoardDTO((String) el.get(0),(int)el.get(1));
+            res.add(temp);
+        }
+
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
     @GetMapping("/scoreboard/daily")
     ResponseEntity<List<LeaderBoardDTO>> daily() {
 

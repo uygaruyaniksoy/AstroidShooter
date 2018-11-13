@@ -9,6 +9,9 @@ import java.util.List;
 
 public interface ScoreBoardRepository extends JpaRepository<ScoreBoard, Long> {
 
+    @Query("select s.player.nickName, max(score) from ScoreBoard s group by s.player.nickName")
+    List<Tuple> getLeaderboard();
+
     @Query("select s.player.nickName, max(score) from ScoreBoard s where  s.date=CURRENT_DATE group by s.player.nickName")
     List<Tuple> getDailyLeaderboard();
 
