@@ -39,15 +39,6 @@ public class PlayerRestController {
 		}
 	}
 
-	@GetMapping("/players/{id}")
-	Optional<Player> getPlayer(@PathVariable Integer id) {
-		return playerRepository.findById(id);
-		//or else throw
-	}
-
-	Optional<Authentication> getToken(@PathVariable Integer id) {
-		return authenticationRepository.findById(id);
-	}
 
 	@GetMapping("/test")
     Collection<LocalDate> testQuery() {
@@ -93,7 +84,6 @@ public class PlayerRestController {
 			return new ResponseEntity<>(playerAuthenticationDTO, HttpStatus.OK);
 		}
 		return new ResponseEntity<>((PlayerAuthenticationDTO) null, HttpStatus.UNAUTHORIZED);
-
 	}
 
 	@PutMapping(path = "/player/change_password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

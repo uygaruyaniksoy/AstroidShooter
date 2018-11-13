@@ -4,11 +4,8 @@ import lombok.Data;
 
 @Data
 public class ScoreBoardDTO {
-    Integer id;
     int score;
-
-    ScoreBoardDTO(int id,int score) {
-        this.id = id;
+    ScoreBoardDTO(int score) {
         this.score = score;
     }
 }
