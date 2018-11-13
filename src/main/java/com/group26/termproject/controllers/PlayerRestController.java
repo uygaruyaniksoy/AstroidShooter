@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 @RestController
-class PlayerRestController {
+public class PlayerRestController {
 	@Autowired
 	PlayerRepository playerRepository;
 	@Autowired
