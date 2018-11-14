@@ -101,6 +101,18 @@ public class PlayerRestController {
 		return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 	}
 
+	@DeleteMapping(path = "/player/sign_out", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<String> sign_out(@RequestHeader("x-access-token") String token) {
+		Optional<Authentication> auth = authenticationRepository.getByToken(token);
+		if(auth != null && auth.isPresent()) {
+			authenticationRepository.delete(auth.get());
+			return new ResponseEntity<>("Signed out",HttpStatus.OK);
+		}
+		else{
+			return new ResponseEntity<>("First sign in", HttpStatus.UNAUTHORIZED);
+		}
+	}
+
 	/**
 	 *
 	 * @param token
@@ -109,7 +121,6 @@ public class PlayerRestController {
 	@GetMapping(path = "/player/me/{token}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Player> me(@PathVariable String token) {
 		Player player = playerRepository.findByToken(token).orElse(null);
-
 		return new ResponseEntity<>(player, player != null ? HttpStatus.OK : HttpStatus.UNAUTHORIZED);
 	}
 }

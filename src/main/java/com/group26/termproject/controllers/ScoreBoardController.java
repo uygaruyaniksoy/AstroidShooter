@@ -9,6 +9,7 @@ import com.group26.termproject.tables.Player;
 import com.group26.termproject.tables.ScoreBoard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -92,14 +93,12 @@ public class ScoreBoardController {
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-    @PostMapping(path="/scoreboard/update")
+    @PostMapping(path="/scoreboard/update",consumes= MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<ScoreBoardDTO> postScore(@RequestHeader("x-access-token") PlayerAuthenticationDTO playerAuthenticationDTO,
                          @RequestBody ScoreBoardDTO scoreBoardDTO) {
 
         Date date = new Date(System.currentTimeMillis());
-
         String token = playerAuthenticationDTO.getToken();
-
         Optional<Player> player = getPlayer(token);
 
         if(player!=null && player.isPresent()) {
