@@ -33,7 +33,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.Optional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@WebMvcTest
+@WebMvcTest(PlayerRestController.class)
 public class PlayerRestControllerTests {
 	@Autowired
 	private MockMvc mockMvc;
