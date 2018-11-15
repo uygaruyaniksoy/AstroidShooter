@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class ScoreBoardDTO {
     int score;
-    ScoreBoardDTO(int score) {
+    public ScoreBoardDTO(int score) {
         this.score = score;
     }
 }

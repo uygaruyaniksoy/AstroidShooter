@@ -3,7 +3,7 @@ package com.group26.termproject.tables;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 
 @Entity
 @Data
@@ -16,9 +16,6 @@ public class ScoreBoard {
     private int score;
 
     public ScoreBoard() {
-        player = new Player();
-        date = null;
-        score = -1;
     }
 
     public ScoreBoard(Player player, Date date, int score) {

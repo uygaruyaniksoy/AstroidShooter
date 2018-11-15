@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.Tuple;
-import java.sql.Date;
 import java.util.*;
 
 @RestController
@@ -29,11 +28,9 @@ public class ScoreBoardController {
         this.playerRepository = playerRepository;
     }
 
-
     Optional<Player> getPlayer(String token) {
 
         if(playerRepository == null){
-            System.out.println("here");
             return null;
         }
 
@@ -41,14 +38,12 @@ public class ScoreBoardController {
         if(p!=null) {
             return p;
         }
-
         return null;
-
     }
 
-    @GetMapping("/scoreboard")
-    ResponseEntity<List<LeaderBoardDTO>> scoreboard() {
 
+    @GetMapping(path="/scoreboard",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<LeaderBoardDTO>> scoreboard() {
         List<Tuple> tuple_list = scoreBoardRepository.getLeaderboard();
         List<LeaderBoardDTO> res = new ArrayList<>();
 
@@ -57,31 +52,37 @@ public class ScoreBoardController {
             res.add(temp);
         }
 
-        return new ResponseEntity<>(res, HttpStatus.OK);
-    }
-
-    @GetMapping("/scoreboard/daily")
-    ResponseEntity<List<LeaderBoardDTO>> daily() {
-
-        List<Tuple> tuple_list = scoreBoardRepository.getDailyLeaderboard();
-        List<LeaderBoardDTO> res = new ArrayList<>();
-
-        for(Tuple el:tuple_list) {
-            LeaderBoardDTO temp = new LeaderBoardDTO((String) el.get(0),(int)el.get(1));
-            res.add(temp);
+        if(tuple_list.size() == 0) {
+            return new ResponseEntity<>(res,HttpStatus.NO_CONTENT);
+        }
+        else {
+            return new ResponseEntity<>(res, HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(res, HttpStatus.OK);
+
+    }
+
+    @GetMapping(path="/scoreboard/daily",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<LeaderBoardDTO>> daily() {
+
+        Optional<List<Tuple>> tuple_list = Optional.ofNullable(scoreBoardRepository.getDailyLeaderboard());
+        List<LeaderBoardDTO> res = new ArrayList<>();
+
+        if(tuple_list.isPresent() && tuple_list.get().size() != 0) {
+            for(Tuple el:tuple_list.get()) {
+                LeaderBoardDTO temp = new LeaderBoardDTO((String) el.get(0),(int)el.get(1));
+                res.add(temp);
+            }
+            return new ResponseEntity<>(res, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(res, HttpStatus.NO_CONTENT);
+        }
     }
 
 
-    @PostMapping("/testing")
-    int f(@RequestBody int a) {
-        return a+3;
-    }
-
-    @GetMapping("/scoreboard/weekly")
-    ResponseEntity<List<LeaderBoardDTO>> weekly() {
+    @GetMapping(path="/scoreboard/weekly",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<LeaderBoardDTO>> weekly() {
 
         List<Tuple> tuple_list = scoreBoardRepository.getWeeklyLeaderboard();
         List<LeaderBoardDTO> res = new ArrayList<>();
@@ -90,14 +91,22 @@ public class ScoreBoardController {
             LeaderBoardDTO temp = new LeaderBoardDTO((String) el.get(0),(int)el.get(1));
             res.add(temp);
         }
-        return new ResponseEntity<>(res, HttpStatus.OK);
+
+        if(tuple_list.size() == 0) {
+            return new ResponseEntity<>(res,HttpStatus.NO_CONTENT);
+        }
+        else {
+            return new ResponseEntity<>(res, HttpStatus.OK);
+        }
     }
 
     @PostMapping(path="/scoreboard/update",consumes= MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<ScoreBoardDTO> postScore(@RequestHeader("x-access-token") PlayerAuthenticationDTO playerAuthenticationDTO,
+    public ResponseEntity<ScoreBoardDTO> postScore(@RequestHeader("x-access-token") PlayerAuthenticationDTO playerAuthenticationDTO,
                          @RequestBody ScoreBoardDTO scoreBoardDTO) {
 
-        Date date = new Date(System.currentTimeMillis());
+        GregorianCalendar g = new GregorianCalendar();
+        Date date = new Date(g.getTime().getTime());
+
         String token = playerAuthenticationDTO.getToken();
         Optional<Player> player = getPlayer(token);
 

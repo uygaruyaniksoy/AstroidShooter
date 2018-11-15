@@ -8,6 +8,9 @@ public class LeaderBoardDTO {
     private String nickName;
     private int score;
 
+    public LeaderBoardDTO() {
+    }
+
     public LeaderBoardDTO(String nickName, int score) {
         this.nickName = nickName;
         this.score = score;
