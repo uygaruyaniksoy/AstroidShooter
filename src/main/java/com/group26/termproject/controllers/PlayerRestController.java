@@ -28,10 +28,10 @@ public class PlayerRestController {
 	@Autowired
 	AuthenticationRepository authenticationRepository;
 
+	// SHA-256 hasher object
 	MessageDigest digest;
 
-	public PlayerRestController() {
-		try {
+	public PlayerRestController() { try {
 			digest = MessageDigest.getInstance("SHA-256");
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
@@ -39,15 +39,14 @@ public class PlayerRestController {
 		}
 	}
 
-
-	@GetMapping("/test")
-    Collection<LocalDate> testQuery() {
-		LocalDate now = LocalDate.now();
-		ArrayList<LocalDate> objects = new ArrayList<>();
-		objects.add(now);
-		return objects;
-	}
-
+	/**
+	 * Takes a dto with user's nickname, email and password. Creates a new Player object in the database if given email is not being used.
+	 *
+	 * Hashes the password and stores the result. Doesn't store the password as it is.
+	 *
+	 * @param playerDTO
+	 * @return ResponseEntity with http request status (401 if given email is used, 200 if the player created succesfully.)
+	 */
 	@PostMapping(path = "/player/sign_up", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity signUp(@RequestBody PlayerSignUpDTO playerDTO) {
 		byte[] hash = digest.digest(playerDTO.getPassword().getBytes(StandardCharsets.UTF_8));
@@ -63,12 +62,17 @@ public class PlayerRestController {
 		return new ResponseEntity(HttpStatus.OK);
 	}
 
-
+	/**
+	 * Takes a dto with user's email and password, Queries for the user email and hashed password.
+	 *
+	 * @param playerDTO
+	 * @return Player's info with 200 code if the user is found, 401 if not found. Also returns a validation token which will be used by player's further queries.
+	 */
 	@PostMapping(path = "/player/sign_in", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<PlayerAuthenticationDTO> signIn(@RequestBody PlayerSignInDTO playerDTO) {
 		String password = playerDTO.getPassword();
 		String email = playerDTO.getEmail();
-		// TODO: in the future receive hashed password, don't hash it here
+
 		byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
 		String passwordHash = Base64.getEncoder().encodeToString(hash);
 
@@ -86,6 +90,14 @@ public class PlayerRestController {
 		return new ResponseEntity<>((PlayerAuthenticationDTO) null, HttpStatus.UNAUTHORIZED);
 	}
 
+	/**
+	 * Takes a dto with user's new password and current token. Queries for the given token to identify the player. If the given token is validated for a user, updates the user's
+	 * password with queried password by hashing it. Stores the new hashed password.
+	 *
+	 * @param playerDTO
+	 * @return status code 401 if user token is not valid, status code 200 if password is changed successfully.
+	 */
+
 	@PutMapping(path = "/player/change_password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity changePassword(@RequestBody PlayerChangePasswordDTO playerDTO) {
 		Player player = playerRepository.findByToken(playerDTO.getToken()).orElse(null);
@@ -101,6 +113,14 @@ public class PlayerRestController {
 		return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 	}
 
+	/**
+	 * Takes the authentication token of the player as argument and queries for it. If successfull; deletes the token, invalidating the token and essentially signing the player out.
+	 * If the token is not found nothing happens.
+	 *
+	 * @param token
+	 * @return http status code 200 if successfully logged out, code 401 if log out is failed.
+	 */
+
 	@DeleteMapping(path = "/player/sign_out", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> sign_out(@RequestHeader("x-access-token") String token) {
 		Optional<Authentication> auth = authenticationRepository.getByToken(token);
@@ -114,13 +134,17 @@ public class PlayerRestController {
 	}
 
 	/**
+	 * Takes the players authentication token by argument and queries with it to find the player id and essentially the player object.
+	 * If the player cannot be found it fails.
 	 *
 	 * @param token
-	 * @return the player with the given authentication token
+	 * @return the player with the given authentication token and http code 200 if found, else code 401.
 	 */
 	@GetMapping(path = "/player/me/{token}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Player> me(@PathVariable String token) {
 		Player player = playerRepository.findByToken(token).orElse(null);
-		return new ResponseEntity<>(player, player != null ? HttpStatus.OK : HttpStatus.UNAUTHORIZED);
+		HttpStatus status = player != null ? HttpStatus.OK : HttpStatus.UNAUTHORIZED;
+
+		return new ResponseEntity<>(player, status);
 	}
 }
