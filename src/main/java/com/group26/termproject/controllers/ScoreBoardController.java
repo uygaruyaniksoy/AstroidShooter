@@ -42,6 +42,20 @@ public class ScoreBoardController {
     }
 
 
+    /**
+     * This service can be used without authenntication.
+     *
+     * When the client calls this service, he/she can see the leaderboard of all times.
+     *
+     * @return ResponseEntity that includes followings:
+     *
+     * -> http request status (204 if there is no score uploaded,
+     * 200 if there is at least one player and one score uploaded by player.)
+     *
+     * -> A list of Leaderboard Data Transfer Objects which includes the nick names of the players and the their maximum scores
+     *
+     */
+
     @GetMapping(path="/scoreboard",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<LeaderBoardDTO>> scoreboard() {
         List<Tuple> tuple_list = scoreBoardRepository.getLeaderboard();
@@ -62,6 +76,21 @@ public class ScoreBoardController {
 
     }
 
+    /**
+     * This service can be used without authenntication.
+     *
+     * When the client calls this service, he/she can see the leaderboard of that day.
+     *
+     * @return ResponseEntity that includes followings:
+     *
+     * -> http request status (204 if there is no score uploaded on that day,
+     * 200 if there is at least one player and one score uploaded by player on that day.)
+     *
+     * -> A list of Leaderboard Data Transfer Objects which includes the nick names of the players
+     * and the their maximum scores that are taken on that day.
+     *
+     */
+
     @GetMapping(path="/scoreboard/daily",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<LeaderBoardDTO>> daily() {
 
@@ -80,6 +109,20 @@ public class ScoreBoardController {
         }
     }
 
+    /**
+     * This service can be used without authenntication.
+     *
+     * When the client calls this service, he/she can see the leaderboard of that week.
+     *
+     * @return ResponseEntity that includes followings:
+     *
+     * -> http request status (204 if there is no score uploaded on that week,
+     * 200 if there is at least one player and one score uploaded by player on that week.)
+     *
+     * -> A list of Leaderboard Data Transfer Objects which includes the nick names of the players
+     * and the their maximum scores that are taken on that week.
+     *
+     */
 
     @GetMapping(path="/scoreboard/weekly",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<LeaderBoardDTO>> weekly() {
@@ -100,6 +143,26 @@ public class ScoreBoardController {
         }
     }
 
+    /**
+     * This service can be used needs authenntication.
+     *
+     * When the client calls this service, he/she can upload the score to the database.
+     *
+     *
+     * @param playerAuthenticationDTO Service needs the authentication token in the header of the request
+     *                                as a value of "x-access-token" to recognize the player
+     *
+     * @param scoreBoardDTO Service also needs score value to save. Score value must be greater than 0.
+     *
+     * @return ResponseEntity that includes followings:
+     *
+     * -> http request status (415 if authenticaiton token is invalid,
+     * 200 if there is at least one player and one score uploaded by player on that week.)
+     *
+     * -> The score value given by user.
+     *
+     */
+
     @PostMapping(path="/scoreboard/update",consumes= MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ScoreBoardDTO> postScore(@RequestHeader("x-access-token") PlayerAuthenticationDTO playerAuthenticationDTO,
                          @RequestBody ScoreBoardDTO scoreBoardDTO) {
@@ -112,7 +175,7 @@ public class ScoreBoardController {
 
         if(player!=null && player.isPresent()) {
             ScoreBoard scoreBoard = scoreBoardRepository.save(new ScoreBoard(player.get(),date,scoreBoardDTO.getScore()));
-            if(scoreBoard != null) {
+            if(scoreBoard != null && scoreBoardDTO.getScore() > 0)  {
                 return new ResponseEntity<>(scoreBoardDTO,HttpStatus.OK);
             }
         }
