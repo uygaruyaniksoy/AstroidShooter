@@ -2,7 +2,6 @@ package com.group26.termproject;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -150,34 +149,6 @@ public class ScoreBoardControllerTest {
         verify(scoreBoardRepository,never()).save(any(ScoreBoard.class));
 
     }
-
-
-//    @Test
-//    public void sidShouldBeCreatedAfterSavingToScoreBoardTable() throws Exception{
-//
-//        Player player = new Player("nick","mail","2");
-//        ScoreBoard scoreBoard = new ScoreBoard();
-//
-//        scoreBoard.setPlayer(player);
-//
-//        scoreBoard.setDate(new Date());
-//        scoreBoard.setScore(5);
-//
-//        ScoreBoardDTO scoreBoardDTO = new ScoreBoardDTO(5);
-//
-//        PlayerAuthenticationDTO playerAuthenticationDTO = new PlayerAuthenticationDTO("some_valid_token");
-//
-//        ResponseEntity<ScoreBoardDTO> re = new ResponseEntity<>(scoreBoardDTO,HttpStatus.OK);
-//
-//        when(scoreBoardController.postScore(playerAuthenticationDTO,scoreBoardDTO))
-//                .thenReturn(re);
-//
-//        this.mockMvc.perform(post("/scoreboard/update")
-//                .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.score",is(5)));
-//    }
-//
 
 
 }
