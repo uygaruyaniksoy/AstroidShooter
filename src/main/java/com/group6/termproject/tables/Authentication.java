@@ -1,4 +1,4 @@
-package com.group26.termproject.tables;
+package com.group6.termproject.tables;
 
 import lombok.Data;
 
@@ -10,7 +10,7 @@ public class Authentication {
     private @Id @GeneratedValue Long id;
     private String token;
     @OneToOne
-    @JoinColumn(name = "pid",nullable = true)
+    @JoinColumn(name = "pid")
     private Player player;
 
     public Authentication() {

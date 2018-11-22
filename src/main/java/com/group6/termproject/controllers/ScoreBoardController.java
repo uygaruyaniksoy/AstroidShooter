@@ -1,12 +1,12 @@
-package com.group26.termproject.controllers;
+package com.group6.termproject.controllers;
 
-import com.group26.termproject.dto.LeaderBoardDTO;
-import com.group26.termproject.dto.PlayerAuthenticationDTO;
-import com.group26.termproject.dto.ScoreBoardDTO;
-import com.group26.termproject.repositories.PlayerRepository;
-import com.group26.termproject.repositories.ScoreBoardRepository;
-import com.group26.termproject.tables.Player;
-import com.group26.termproject.tables.ScoreBoard;
+import com.group6.termproject.dto.LeaderBoardDTO;
+import com.group6.termproject.dto.PlayerAuthenticationDTO;
+import com.group6.termproject.dto.ScoreBoardDTO;
+import com.group6.termproject.repositories.PlayerRepository;
+import com.group6.termproject.repositories.ScoreBoardRepository;
+import com.group6.termproject.tables.Player;
+import com.group6.termproject.tables.ScoreBoard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,27 +18,22 @@ import java.util.*;
 
 @RestController
 public class ScoreBoardController {
-    @Autowired
     private final ScoreBoardRepository scoreBoardRepository;
-    @Autowired
     private final PlayerRepository playerRepository;
 
+    @Autowired
     ScoreBoardController(ScoreBoardRepository repository, PlayerRepository playerRepository) {
         this.scoreBoardRepository = repository;
         this.playerRepository = playerRepository;
     }
 
-    Optional<Player> getPlayer(String token) {
+    private Optional<Player> getPlayer(String token) {
 
         if(playerRepository == null){
-            return null;
+            return Optional.empty();
         }
 
-        Optional<Player> p = playerRepository.findByToken(token);
-        if(p!=null) {
-            return p;
-        }
-        return null;
+        return playerRepository.findByToken(token);
     }
 
 

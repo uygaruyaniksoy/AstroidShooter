@@ -1,22 +1,14 @@
-package com.group26.termproject;
+package com.group6.termproject;
 
-import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.group26.termproject.controllers.ScoreBoardController;
-import com.group26.termproject.dto.LeaderBoardDTO;
-import com.group26.termproject.dto.PlayerAuthenticationDTO;
-import com.group26.termproject.dto.ScoreBoardDTO;
-import com.group26.termproject.repositories.PlayerRepository;
-import com.group26.termproject.repositories.ScoreBoardRepository;
-import com.group26.termproject.tables.Player;
-import com.group26.termproject.tables.ScoreBoard;
+import com.group6.termproject.controllers.ScoreBoardController;
+import com.group6.termproject.dto.LeaderBoardDTO;
+import com.group6.termproject.dto.PlayerAuthenticationDTO;
+import com.group6.termproject.dto.ScoreBoardDTO;
+import com.group6.termproject.repositories.PlayerRepository;
+import com.group6.termproject.repositories.ScoreBoardRepository;
+import com.group6.termproject.tables.Player;
+import com.group6.termproject.tables.ScoreBoard;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +20,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith( SpringJUnit4ClassRunner.class )
 @WebMvcTest(ScoreBoardController.class)
@@ -43,17 +43,10 @@ public class ScoreBoardControllerTest {
     private ScoreBoardController scoreBoardController;
 
 
-    private ObjectMapper mapper;
-
-    @Before
-    public void setup() {
-
-    }
-
     //scoreboard/daily, scoreboard, scoreboard/weekly will generally be tested together since their implementation is very similar
 
     @Test
-    public void shouldReturnNoContentResponse() throws Exception{
+    public void shouldReturnNoContentResponse() throws Exception {
 
         List<LeaderBoardDTO> arrayList = new ArrayList<>();
         ResponseEntity<List<LeaderBoardDTO>> responseEntity =
@@ -76,10 +69,8 @@ public class ScoreBoardControllerTest {
                 .andExpect(status().isNoContent());
     }
 
-
-
     @Test
-    public void scoreShouldbeSavedTypeCheck() throws Exception {
+    public void scoreShouldbeSavedTypeCheck() {
         ScoreBoard scoreBoard = new ScoreBoard();
         scoreBoard.setPlayer(new Player("nick","mail","2"));
         scoreBoard.setDate(new Date());

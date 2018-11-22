@@ -1,11 +1,10 @@
-package com.group26.termproject.controllers;
+package com.group6.termproject.controllers;
 
-import com.group26.termproject.dto.*;
-import com.group26.termproject.repositories.AuthenticationRepository;
-import com.group26.termproject.repositories.PlayerRepository;
-import com.group26.termproject.tables.Authentication;
-import com.group26.termproject.tables.Player;
-import org.aspectj.apache.bcel.util.Play;
+import com.group6.termproject.dto.*;
+import com.group6.termproject.repositories.AuthenticationRepository;
+import com.group6.termproject.repositories.PlayerRepository;
+import com.group6.termproject.tables.Authentication;
+import com.group6.termproject.tables.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,28 +14,26 @@ import org.springframework.web.bind.annotation.*;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Collection;
 import java.util.Optional;
 
 @RestController
 public class PlayerRestController {
-	@Autowired
-	PlayerRepository playerRepository;
-	@Autowired
-	AuthenticationRepository authenticationRepository;
+	private final PlayerRepository playerRepository;
+	private final AuthenticationRepository authenticationRepository;
 
 	// SHA-256 hasher object
-	MessageDigest digest;
+	private MessageDigest digest;
 
-	public PlayerRestController() { try {
+	@Autowired
+	public PlayerRestController(PlayerRepository playerRepository, AuthenticationRepository authenticationRepository) {
+		try {
 			digest = MessageDigest.getInstance("SHA-256");
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
-			return;
 		}
+		this.playerRepository = playerRepository;
+		this.authenticationRepository = authenticationRepository;
 	}
 
 	/**
@@ -44,7 +41,7 @@ public class PlayerRestController {
 	 *
 	 * Hashes the password and stores the result. Doesn't store the password as it is.
 	 *
-	 * @param playerDTO
+	 * @param playerDTO user's nickname, email and password
 	 * @return ResponseEntity with http request status (401 if given email is used, 200 if the player created succesfully.)
 	 */
 	@PostMapping(path = "/player/sign_up", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -65,7 +62,7 @@ public class PlayerRestController {
 	/**
 	 * Takes a dto with user's email and password, Queries for the user email and hashed password.
 	 *
-	 * @param playerDTO
+	 * @param playerDTO user's email and password
 	 * @return Player's info with 200 code if the user is found, 401 if not found. Also returns a validation token which will be used by player's further queries.
 	 */
 	@PostMapping(path = "/player/sign_in", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -94,7 +91,7 @@ public class PlayerRestController {
 	 * Takes a dto with user's new password and current token. Queries for the given token to identify the player. If the given token is validated for a user, updates the user's
 	 * password with queried password by hashing it. Stores the new hashed password.
 	 *
-	 * @param playerDTO
+	 * @param playerDTO user's new password and current token
 	 * @return status code 401 if user token is not valid, status code 200 if password is changed successfully.
 	 */
 
@@ -117,7 +114,7 @@ public class PlayerRestController {
 	 * Takes the authentication token of the player as argument and queries for it. If successfull; deletes the token, invalidating the token and essentially signing the player out.
 	 * If the token is not found nothing happens.
 	 *
-	 * @param token
+	 * @param token user's authenticaiton token
 	 * @return http status code 200 if successfully logged out, code 401 if log out is failed.
 	 */
 
@@ -137,7 +134,7 @@ public class PlayerRestController {
 	 * Takes the players authentication token by argument and queries with it to find the player id and essentially the player object.
 	 * If the player cannot be found it fails.
 	 *
-	 * @param token
+	 * @param token user's authentication token
 	 * @return the player with the given authentication token and http code 200 if found, else code 401.
 	 */
 	@GetMapping(path = "/player/me/{token}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

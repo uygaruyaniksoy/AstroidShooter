@@ -1,4 +1,4 @@
-package com.group26.termproject;
+package com.group6.termproject;
 
 import org.springframework.stereotype.Component;
 
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 class CommandLineRunner implements org.springframework.boot.CommandLineRunner {
 
 	@Override
-	public void run(String... args) throws Exception {
+	public void run(String... args) {
 
 	}
 }

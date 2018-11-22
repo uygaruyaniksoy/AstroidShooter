@@ -1,4 +1,4 @@
-package com.group26.termproject;
+package com.group6.termproject;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

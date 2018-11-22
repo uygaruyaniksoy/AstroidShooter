@@ -1,25 +1,22 @@
-package com.group26.termproject;
+package com.group6.termproject;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.group26.termproject.controllers.PlayerRestController;
-import com.group26.termproject.dto.PlayerChangePasswordDTO;
-import com.group26.termproject.dto.PlayerSignInDTO;
-import com.group26.termproject.repositories.AuthenticationRepository;
-import com.group26.termproject.repositories.PlayerRepository;
-import com.group26.termproject.tables.Authentication;
-import com.group26.termproject.tables.Player;
-import org.aspectj.apache.bcel.util.Play;
+import com.group6.termproject.controllers.PlayerRestController;
+import com.group6.termproject.dto.PlayerChangePasswordDTO;
+import com.group6.termproject.dto.PlayerSignInDTO;
+import com.group6.termproject.repositories.AuthenticationRepository;
+import com.group6.termproject.repositories.PlayerRepository;
+import com.group6.termproject.tables.Authentication;
+import com.group6.termproject.tables.Player;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import static org.hamcrest.Matchers.is;
+
+import static org.hamcrest.Matchers.isA;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +25,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Optional;
 
@@ -42,10 +38,6 @@ public class PlayerRestControllerTests {
 	@MockBean
 	private AuthenticationRepository authenticationRepository;
 	private ObjectMapper mapper;
-
-	@Test
-	public void contextLoads() {
-	}
 
 	@Before
 	public void setUp() {
@@ -114,7 +106,7 @@ public class PlayerRestControllerTests {
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.token", is(String.class)));
+				.andExpect(jsonPath("$.token", isA(String.class)));
 
 		verify(authenticationRepository, times(1)).save(any(Authentication.class));
 	}
@@ -161,14 +153,12 @@ public class PlayerRestControllerTests {
 		mockMvc.perform(get("/player/me/token").contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.nickName", is(String.class)))
-				.andExpect(jsonPath("$.email", is(String.class)));
+				.andExpect(jsonPath("$.nickName", isA(String.class)))
+				.andExpect(jsonPath("$.email", isA(String.class)));
 	}
 
 	@Test
 	public void shouldNotReturnTheAuthenticatedPlayerIfTokenIsInvalid() throws Exception {
-		Player player = new Player("test", "test", "test");
-
 		when(playerRepository.findByToken(any(String.class))).thenReturn(Optional.empty());
 
 		mockMvc.perform(get("/player/me/token").contentType(MediaType.APPLICATION_JSON)

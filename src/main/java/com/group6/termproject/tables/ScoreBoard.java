@@ -1,4 +1,4 @@
-package com.group26.termproject.tables;
+package com.group6.termproject.tables;
 
 import lombok.Data;
 

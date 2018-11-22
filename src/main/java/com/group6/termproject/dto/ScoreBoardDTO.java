@@ -1,4 +1,4 @@
-package com.group26.termproject.dto;
+package com.group6.termproject.dto;
 
 import lombok.Data;
 
