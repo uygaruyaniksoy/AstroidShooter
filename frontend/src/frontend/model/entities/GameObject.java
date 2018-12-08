@@ -48,6 +48,8 @@ public abstract class GameObject implements IGameObject {
         if (gameObject.source == this || this.source == gameObject) return;
         dealDamage(gameObject.getHealth());
         gameObject.dealDamage(curHealth);
+        if (gameObject.source != null) gameObject.dealDamage(gameObject.getHealth());
+        if (this.source != null) this.dealDamage(this.getHealth());
     }
 
     public int getHealth() {
@@ -59,7 +61,7 @@ public abstract class GameObject implements IGameObject {
     }
 
     public boolean isDead() {
-        return curHealth < 0;
+        return curHealth <= 0;
     }
 
     public void dealDamage(int damage) {
