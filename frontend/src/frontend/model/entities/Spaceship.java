@@ -1,8 +1,9 @@
 package frontend.model.entities;
 
+import frontend.model.entities.ammos.Ammunition;
 import frontend.model.enums.AttackType;
 
 public interface Spaceship {
 
-    public void attack(AttackType attackType);
+    public GameObject attack(double x, double y, AttackType attackType);
 }

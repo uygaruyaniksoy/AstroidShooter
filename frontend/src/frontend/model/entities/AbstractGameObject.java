@@ -3,11 +3,11 @@ package frontend.model.entities;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-public abstract class AbstractSpaceship implements Drawable, Spaceship, GameObject {
+public abstract class AbstractGameObject implements GameObject {
     protected Stage stage;
     protected Pane pane;
 
-    public AbstractSpaceship(Stage stage) {
+    public AbstractGameObject(Stage stage) {
         this.stage = stage;
         Pane pane = (Pane) this.stage.getScene().getRoot();
         this.pane = new Pane();

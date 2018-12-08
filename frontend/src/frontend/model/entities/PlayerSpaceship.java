@@ -1,5 +1,7 @@
 package frontend.model.entities;
 
+import frontend.model.entities.ammos.Ammunition;
+import frontend.model.entities.ammos.Rocket;
 import frontend.model.enums.AttackType;
 import frontend.util.Scheduler;
 import javafx.scene.input.MouseEvent;
@@ -9,52 +11,13 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import frontend.util.Timer;
 
-public class PlayerSpaceship extends AbstractSpaceship {
-    private Timer timer;
-    private MouseEvent mouseEvent;
-
+public class PlayerSpaceship extends AbstractGameObject implements Spaceship {
     private int speed = 10;
-    private double shootRate = 1;
+    private double shootRate = 0.3;
     private Scheduler shootScheduler;
 
     public PlayerSpaceship(Stage stage) {
         super(stage);
-
-        this.stage.getScene().onMouseMovedProperty().setValue(this::onMouseMoved);
-        this.stage.getScene().onMouseDraggedProperty().setValue(this::onMouseDragged);
-        this.stage.getScene().onMousePressedProperty().setValue(this::onMousePressed);
-        this.stage.getScene().onMouseReleasedProperty().setValue(this::onMouseReleased);
-    }
-
-    private void onMouseReleased(MouseEvent mouseEvent) {
-        shootScheduler.stop();
-        shootScheduler = null;
-    }
-
-    private void onMousePressed(MouseEvent mouseEvent) {
-        this.mouseEvent = mouseEvent;
-        attack(AttackType.LIGHT);
-    }
-
-    private void onMouseDragged(MouseEvent mouseEvent) {
-        this.mouseEvent = mouseEvent;
-        onMouseMoved(mouseEvent);
-    }
-
-    private void onMouseMoved(MouseEvent mouseEvent) {
-        this.mouseEvent = mouseEvent;
-        if (timer != null) return;
-        PlayerSpaceship that = this;
-        timer = new Timer() {
-            @Override
-            public void update(double delta) {
-                if (that.moveTo(that.mouseEvent.getX(), that.mouseEvent.getY(), delta)) {
-                    that.timer.stop();
-                    that.timer = null;
-                }
-            }
-        };
-        timer.start();
     }
 
     @Override
@@ -121,19 +84,31 @@ public class PlayerSpaceship extends AbstractSpaceship {
     }
 
     @Override
-    public void attack(AttackType attackType) {
-        PlayerSpaceship that = this;
-        shootScheduler = new Scheduler(shootRate) {
-            @Override
-            public void execute() {
-                shootAt(that.mouseEvent.getX(), that.mouseEvent.getY(), attackType);
-            }
-        };
-        shootScheduler.start();
+    public GameObject attack(double x, double y, AttackType attackType) {
+        int centerX = 40;
+        int centerY = 25;
+        int bulletOffset = 30;
+
+        int gunIndex = (int) (Math.random() * 2) * 2 - 1;
+
+        return new Rocket(stage,
+                pane.getTranslateX() + pane.getLayoutX() + centerX + bulletOffset * gunIndex,
+                pane.getTranslateY() + pane.getLayoutY() + centerY * 2);
     }
 
-    private void shootAt(double x, double y, AttackType attackType) {
-        System.out.println("fire");
+    public Scheduler getShootScheduler() {
+        return shootScheduler;
+    }
 
+    public void setShootScheduler(Scheduler shootScheduler) {
+        this.shootScheduler = shootScheduler;
+    }
+
+    public double getShootRate() {
+        return shootRate;
+    }
+
+    public void setShootRate(double shootRate) {
+        this.shootRate = shootRate;
     }
 }
