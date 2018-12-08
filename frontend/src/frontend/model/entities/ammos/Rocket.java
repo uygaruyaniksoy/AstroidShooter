@@ -1,16 +1,17 @@
 package frontend.model.entities.ammos;
 
-import frontend.model.entities.AbstractGameObject;
-import frontend.util.Timer;
+import frontend.model.entities.GameObject;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
-public class Rocket extends AbstractGameObject implements Ammunition {
+public class Rocket extends GameObject implements Ammunition {
     private int speed = 500;
 
-    public Rocket(Stage stage, double x, double y) {
+    public Rocket(Stage stage, GameObject source, double x, double y) {
         super(stage, 20);
+
+        this.source = source;
 
         this.pane.setTranslateX(x);
         this.pane.setTranslateY(y);

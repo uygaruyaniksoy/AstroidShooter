@@ -2,7 +2,6 @@ package frontend.util;
 
 import frontend.model.entities.GameObject;
 import frontend.model.entities.enemies.PassiveEnemy;
-import frontend.util.Scheduler;
 import javafx.stage.Stage;
 
 public class EnemySpawner implements Spawner {

@@ -1,17 +1,14 @@
 package frontend.model.entities;
 
-import frontend.model.entities.ammos.Ammunition;
 import frontend.model.entities.ammos.Rocket;
 import frontend.model.enums.AttackType;
 import frontend.util.Scheduler;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import frontend.util.Timer;
 
-public class PlayerSpaceship extends AbstractGameObject implements Spaceship {
+public class PlayerSpaceship extends GameObject implements Spaceship {
     private int speed = 10;
     private double shootRate = 0.3;
     private Scheduler shootScheduler;
@@ -97,7 +94,7 @@ public class PlayerSpaceship extends AbstractGameObject implements Spaceship {
 
         int gunIndex = (int) (Math.random() * 2) * 2 - 1;
 
-        return new Rocket(stage,
+        return new Rocket(stage, this,
                 pane.getTranslateX() + pane.getLayoutX() + centerX + bulletOffset * gunIndex,
                 pane.getTranslateY() + pane.getLayoutY() + centerY * 2);
     }

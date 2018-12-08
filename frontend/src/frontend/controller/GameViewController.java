@@ -9,6 +9,7 @@ import frontend.util.Spawner;
 import frontend.util.Timer;
 import frontend.view.FeedbackGradient;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -18,7 +19,6 @@ public class GameViewController {
     private Stage stage;
     private FeedbackGradient gradient;
 
-    private MouseEvent mouseEvent;
     private Timer timer;
 
     private PlayerSpaceship player;
@@ -38,6 +38,66 @@ public class GameViewController {
         this.stage.getScene().onMousePressedProperty().setValue(this::onMousePressed);
         this.stage.getScene().onMouseReleasedProperty().setValue(this::onMouseReleased);
 
+        setEnemySpawner();
+        setUpdateGameObjects();
+    }
+
+    private void onMouseReleased(MouseEvent mouseEvent) {
+        player.getShootScheduler().stop();
+        player.setShootScheduler(null);
+    }
+
+    private void onMousePressed(MouseEvent mouseEvent) {
+        player.setShootScheduler(new Scheduler(player.getShootRate()) {
+            @Override
+            public void execute() {
+                gameObjects.add(player.attack(mouseEvent.getX(), mouseEvent.getY(), AttackType.LIGHT));
+            }
+        });
+        player.getShootScheduler().start();
+    }
+
+    private void onMouseDragged(MouseEvent mouseEvent) {
+        player.move(mouseEvent.getX(), mouseEvent.getY());
+    }
+
+    private void onMouseMoved(MouseEvent mouseEvent) {
+        player.move(mouseEvent.getX(), mouseEvent.getY());
+    }
+
+    private void setUpdateGameObjects() {
+        timer = new Timer() {
+            @Override
+            public void update(double delta) {
+                Pane pane = ((Pane) stage.getScene().getRoot());
+                for (int i = 0; i < gameObjects.size(); i++) {
+                    GameObject gameObject = gameObjects.get(i);
+                    gameObject.update(delta);
+                    for (int j = i + 1; j < gameObjects.size(); j++) {
+                        GameObject otherGameObject = gameObjects.get(j);
+                        if (gameObject
+                                .getRootPane()
+                                .getBoundsInParent()
+                                .intersects(otherGameObject.getRootPane().getBoundsInParent())) {
+                            gameObject.intersect(otherGameObject);
+
+                            if (gameObject.isDead()) {
+                                gameObjects.remove(gameObject);
+                                pane.getChildren().remove(gameObject.getRootPane());
+                            }
+                            if (otherGameObject.isDead()) {
+                                gameObjects.remove(otherGameObject);
+                                pane.getChildren().remove(otherGameObject.getRootPane());
+                            }
+                        }
+                    }
+                }
+            }
+        };
+        timer.start();
+    }
+
+    private void setEnemySpawner() {
         Spawner enemySpawner = new EnemySpawner(stage);
         enemySpawner.setSpawnScheduler(new Scheduler(0.5) {
             long sec = 0;
@@ -50,42 +110,5 @@ public class GameViewController {
             }
         });
         enemySpawner.getSpawnScheduler().start();
-
-        GameViewController that = this;
-        timer = new Timer() {
-            @Override
-            public void update(double delta) {
-                for (GameObject gameObject: gameObjects) {
-                    gameObject.update(delta);
-                }
-            }
-        };
-        timer.start();
-    }
-
-    private void onMouseReleased(MouseEvent mouseEvent) {
-        player.getShootScheduler().stop();
-        player.setShootScheduler(null);
-    }
-
-    private void onMousePressed(MouseEvent mouseEvent) {
-        this.mouseEvent = mouseEvent;
-        player.setShootScheduler(new Scheduler(player.getShootRate()) {
-            @Override
-            public void execute() {
-                gameObjects.add(player.attack(mouseEvent.getX(), mouseEvent.getY(), AttackType.LIGHT));
-            }
-        });
-        player.getShootScheduler().start();
-    }
-
-    private void onMouseDragged(MouseEvent mouseEvent) {
-        this.mouseEvent = mouseEvent;
-        player.move(mouseEvent.getX(), mouseEvent.getY());
-    }
-
-    private void onMouseMoved(MouseEvent mouseEvent) {
-        this.mouseEvent = mouseEvent;
-        player.move(mouseEvent.getX(), mouseEvent.getY());
     }
 }

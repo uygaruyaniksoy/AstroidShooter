@@ -1,24 +1,20 @@
 package frontend.model.entities.enemies;
 
-import frontend.model.entities.AbstractGameObject;
 import frontend.model.entities.GameObject;
 import frontend.model.entities.Spaceship;
-import frontend.model.entities.ammos.Rocket;
 import frontend.model.enums.AttackType;
-import frontend.util.Scheduler;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 
-public class PassiveEnemy extends AbstractGameObject implements Spaceship, EnemyAI {
+public class PassiveEnemy extends GameObject implements Spaceship, EnemyAI {
     private int speed = -60;
 
     public PassiveEnemy(Stage stage, double spawnLocation) {
         super(stage, 10);
         this.pane.setTranslateX(spawnLocation);
-        this.pane.setTranslateY(100);
+        this.pane.setTranslateY(-100);
     }
 
     @Override
