@@ -2,7 +2,9 @@ package frontend.model.entities;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import frontend.util.Timer;
 
@@ -36,16 +38,51 @@ public class PlayerSpaceship extends AbstractSpaceship {
 
     @Override
     public void draw() {
-        this.pane.setStyle("-fx-background-color: brown");
+        int centerX = 40;
+        int centerY = 25;
+        int hullRadius = 15;
+        int bulletWidth = 10;
+        int bulletHeight = 25;
+        int bulletOffset = 30;
 
-        Rectangle rectangle = new Rectangle();
-        rectangle.setHeight(50);
-        rectangle.setWidth(50);
-        rectangle.setY(0);
-        rectangle.setX(0);
-        rectangle.setFill(Color.PURPLE);
+        Rectangle axle = new Rectangle();
+        axle.setHeight(10);
+        axle.setWidth(centerX * 2);
+        axle.setY(centerY * 2);
+        axle.setFill(Color.BLACK);
 
-        this.pane.getChildren().add(rectangle);
+        Rectangle bulletLeft = new Rectangle();
+        bulletLeft.setHeight(bulletHeight);
+        bulletLeft.setWidth(bulletWidth);
+        bulletLeft.setY(centerY * 2 - bulletHeight / 2.0);
+        bulletLeft.setX(centerX - bulletOffset- bulletWidth / 2.0);
+        bulletLeft.setFill(Color.DARKORCHID);
+
+        Rectangle bulletRight = new Rectangle();
+        bulletRight.setHeight(bulletHeight);
+        bulletRight.setWidth(bulletWidth);
+        bulletRight.setY(centerY * 2 - bulletHeight / 2.0);
+        bulletRight.setX(centerX + bulletOffset - bulletWidth / 2.0);
+        bulletRight.setFill(Color.DARKORCHID);
+
+        Circle hull = new Circle();
+        hull.setCenterX(centerX);
+        hull.setCenterY(hullRadius);
+        hull.setRadius(hullRadius);
+        hull.setFill(Color.PURPLE);
+
+        Rectangle body = new Rectangle();
+        body.setHeight(50);
+        body.setWidth(hullRadius * 2);
+        body.setY(hullRadius);
+        body.setX(centerX - hullRadius);
+        body.setFill(Color.PURPLE);
+
+        this.pane.getChildren().add(axle);
+        this.pane.getChildren().add(bulletLeft);
+        this.pane.getChildren().add(bulletRight);
+        this.pane.getChildren().add(body);
+        this.pane.getChildren().add(hull);
     }
 
     @Override
@@ -58,8 +95,6 @@ public class PlayerSpaceship extends AbstractSpaceship {
 
         this.pane.setTranslateX(newX);
         this.pane.setTranslateY(newY);
-
-        System.out.println("Move" + rate);
 
         return Math.abs(newX - toX) < 0.01 && Math.abs(newY - toY) < 0.01;
     }

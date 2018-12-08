@@ -24,7 +24,8 @@ public class Main extends Application {
 		scenes.put(GameScreen.GAME, new GameView(stage).getScene());
 
 		// Start with the main scene
-		stage.setScene(scenes.get(GameScreen.MAIN_MENU));
+//		stage.setScene(scenes.get(GameScreen.MAIN_MENU));
+		stage.setScene(scenes.get(GameScreen.GAME));
 		stage.show();
 	}
 
