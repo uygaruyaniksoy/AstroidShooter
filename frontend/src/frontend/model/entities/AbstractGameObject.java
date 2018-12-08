@@ -18,4 +18,14 @@ public abstract class AbstractGameObject implements GameObject {
         this.pane.layoutYProperty().bind(this.pane.heightProperty().divide(-2));
         draw();
     }
+
+    @Override
+    public void update(double delta) {
+
+    }
+
+    @Override
+    public void move(double x, double y) {
+
+    }
 }

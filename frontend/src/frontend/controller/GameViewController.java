@@ -3,7 +3,9 @@ package frontend.controller;
 import frontend.model.entities.GameObject;
 import frontend.model.entities.PlayerSpaceship;
 import frontend.model.enums.AttackType;
+import frontend.util.EnemySpawner;
 import frontend.util.Scheduler;
+import frontend.util.Spawner;
 import frontend.util.Timer;
 import frontend.view.FeedbackGradient;
 import javafx.scene.input.MouseEvent;
@@ -29,11 +31,36 @@ public class GameViewController {
     public void startGame(MouseEvent mouseEvent) {
         gradient = new FeedbackGradient(stage);
         player = new PlayerSpaceship(stage);
+        gameObjects.add(player);
 
         this.stage.getScene().onMouseMovedProperty().setValue(this::onMouseMoved);
         this.stage.getScene().onMouseDraggedProperty().setValue(this::onMouseDragged);
         this.stage.getScene().onMousePressedProperty().setValue(this::onMousePressed);
         this.stage.getScene().onMouseReleasedProperty().setValue(this::onMouseReleased);
+
+        Spawner enemySpawner = new EnemySpawner(stage);
+        enemySpawner.setSpawnScheduler(new Scheduler(0.5) {
+            long sec = 0;
+            @Override
+            public void execute() {
+                GameObject gameObject = enemySpawner.checkAndSpawn(sec++);
+                if (gameObject != null) {
+                    gameObjects.add(gameObject);
+                }
+            }
+        });
+        enemySpawner.getSpawnScheduler().start();
+
+        GameViewController that = this;
+        timer = new Timer() {
+            @Override
+            public void update(double delta) {
+                for (GameObject gameObject: gameObjects) {
+                    gameObject.update(delta);
+                }
+            }
+        };
+        timer.start();
     }
 
     private void onMouseReleased(MouseEvent mouseEvent) {
@@ -54,22 +81,11 @@ public class GameViewController {
 
     private void onMouseDragged(MouseEvent mouseEvent) {
         this.mouseEvent = mouseEvent;
-        onMouseMoved(mouseEvent);
+        player.move(mouseEvent.getX(), mouseEvent.getY());
     }
 
     private void onMouseMoved(MouseEvent mouseEvent) {
         this.mouseEvent = mouseEvent;
-        if (timer != null) return;
-        GameViewController that = this;
-        timer = new Timer() {
-            @Override
-            public void update(double delta) {
-                if (player.moveTo(that.mouseEvent.getX(), that.mouseEvent.getY(), delta)) {
-                    that.timer.stop();
-                    that.timer = null;
-                }
-            }
-        };
-        timer.start();
+        player.move(mouseEvent.getX(), mouseEvent.getY());
     }
 }

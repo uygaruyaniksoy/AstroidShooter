@@ -1,11 +1,14 @@
 package frontend.model.entities.ammos;
 
 import frontend.model.entities.AbstractGameObject;
+import frontend.util.Timer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class Rocket extends AbstractGameObject implements Ammunition {
+    private int speed = 500;
+
     public Rocket(Stage stage, double x, double y) {
         super(stage);
 
@@ -27,7 +30,8 @@ public class Rocket extends AbstractGameObject implements Ammunition {
     }
 
     @Override
-    public boolean moveTo(double x, double y, double rate) {
-        return false;
+    public void update(double delta) {
+        this.pane.setTranslateX(this.pane.getTranslateX());
+        this.pane.setTranslateY(this.pane.getTranslateY() - speed * delta);
     }
 }

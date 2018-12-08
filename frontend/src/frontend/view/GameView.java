@@ -25,6 +25,7 @@ public class GameView extends AbstractView {
         Button button = new Button("Start Game");
         button.translateXProperty().bind(stage.widthProperty().divide(2).subtract(button.widthProperty().divide(2)));
         button.translateYProperty().bind(stage.heightProperty().divide(2).subtract(button.heightProperty().divide(2)));
+
         button.addEventFilter(MouseEvent.MOUSE_CLICKED, controller::startGame);
         button.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
             pane.getChildren().remove(button);

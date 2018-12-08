@@ -15,6 +15,8 @@ public class PlayerSpaceship extends AbstractGameObject implements Spaceship {
     private int speed = 10;
     private double shootRate = 0.3;
     private Scheduler shootScheduler;
+    private double moveTargetX;
+    private double moveTargetY;
 
     public PlayerSpaceship(Stage stage) {
         super(stage);
@@ -53,14 +55,14 @@ public class PlayerSpaceship extends AbstractGameObject implements Spaceship {
         hull.setCenterX(centerX);
         hull.setCenterY(hullRadius);
         hull.setRadius(hullRadius);
-        hull.setFill(Color.PURPLE);
+        hull.setFill(Color.DARKBLUE);
 
         Rectangle body = new Rectangle();
         body.setHeight(50);
         body.setWidth(hullRadius * 2);
         body.setY(hullRadius);
         body.setX(centerX - hullRadius);
-        body.setFill(Color.PURPLE);
+        body.setFill(Color.DARKBLUE);
 
         this.pane.getChildren().add(axle);
         this.pane.getChildren().add(bulletLeft);
@@ -70,17 +72,21 @@ public class PlayerSpaceship extends AbstractGameObject implements Spaceship {
     }
 
     @Override
-    public boolean moveTo(double toX, double toY, double rate) {
+    public void move(double toX, double toY) {
+        this.moveTargetX = toX;
+        this.moveTargetY = toY;
+    }
+
+    @Override
+    public void update(double delta) {
         double fromX = this.pane.getTranslateX();
         double fromY = this.pane.getTranslateY();
 
-        double newX = fromX + (toX - fromX) * this.speed * rate;
-        double newY = fromY + (toY - fromY) * this.speed * rate;
+        double newX = fromX + (moveTargetX - fromX) * this.speed * delta;
+        double newY = fromY + (moveTargetY - fromY) * this.speed * delta;
 
         this.pane.setTranslateX(newX);
         this.pane.setTranslateY(newY);
-
-        return Math.abs(newX - toX) < 0.01 && Math.abs(newY - toY) < 0.01;
     }
 
     @Override
@@ -106,9 +112,5 @@ public class PlayerSpaceship extends AbstractGameObject implements Spaceship {
 
     public double getShootRate() {
         return shootRate;
-    }
-
-    public void setShootRate(double shootRate) {
-        this.shootRate = shootRate;
     }
 }

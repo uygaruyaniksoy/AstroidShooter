@@ -5,5 +5,5 @@ import frontend.model.enums.AttackType;
 
 public interface Spaceship {
 
-    public GameObject attack(double x, double y, AttackType attackType);
+    GameObject attack(double x, double y, AttackType attackType);
 }
