@@ -12,12 +12,12 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 
-public class PassiveEnemy extends AbstractGameObject implements Spaceship, AIShip {
+public class PassiveEnemy extends AbstractGameObject implements Spaceship, EnemyAI {
     private int speed = -60;
 
-    public PassiveEnemy(Stage stage, double x) {
-        super(stage);
-        this.pane.setTranslateX(x);
+    public PassiveEnemy(Stage stage, double spawnLocation) {
+        super(stage, 10);
+        this.pane.setTranslateX(spawnLocation);
         this.pane.setTranslateY(100);
     }
 

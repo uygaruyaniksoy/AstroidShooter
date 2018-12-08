@@ -7,11 +7,17 @@ public abstract class AbstractGameObject implements GameObject {
     protected Stage stage;
     protected Pane pane;
 
-    public AbstractGameObject(Stage stage) {
+    protected int curHealth;
+    protected int maxHealth;
+
+    public AbstractGameObject(Stage stage, int health) {
         this.stage = stage;
         Pane pane = (Pane) this.stage.getScene().getRoot();
         this.pane = new Pane();
         pane.getChildren().add(this.pane);
+
+        curHealth = health;
+        maxHealth = health;
 
         // center the pane around spaceship
         this.pane.layoutXProperty().bind(this.pane.widthProperty().divide(-2));

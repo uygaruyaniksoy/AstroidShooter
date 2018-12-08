@@ -10,7 +10,7 @@ public class Rocket extends AbstractGameObject implements Ammunition {
     private int speed = 500;
 
     public Rocket(Stage stage, double x, double y) {
-        super(stage);
+        super(stage, 20);
 
         this.pane.setTranslateX(x);
         this.pane.setTranslateY(y);

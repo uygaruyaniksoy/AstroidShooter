@@ -19,7 +19,7 @@ public class PlayerSpaceship extends AbstractGameObject implements Spaceship {
     private double moveTargetY;
 
     public PlayerSpaceship(Stage stage) {
-        super(stage);
+        super(stage, 100);
     }
 
     @Override
