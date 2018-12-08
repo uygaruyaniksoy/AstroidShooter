@@ -3,7 +3,7 @@ package frontend.model.entities;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-public abstract class AbstractSpaceship implements Drawable, Spaceship {
+public abstract class AbstractSpaceship implements Drawable, Spaceship, GameObject {
     protected Stage stage;
     protected Pane pane;
     protected int speed = 10;

@@ -15,6 +15,7 @@ public class PlayerSpaceship extends AbstractSpaceship {
         super(stage);
 
         this.stage.getScene().onMouseMovedProperty().setValue(this::onMouseMoved);
+        this.stage.getScene().onMouseDraggedProperty().setValue(this::onMouseMoved);
     }
 
     private void onMouseMoved(MouseEvent mouseEvent) {
@@ -24,16 +25,7 @@ public class PlayerSpaceship extends AbstractSpaceship {
         timer = new Timer() {
             @Override
             public void update(double delta) {
-                double x = that.pane.getTranslateX();
-                double y = that.pane.getTranslateY();
-
-                double newX = x + (that.mouseEvent.getX() - x) * that.speed * delta;
-                double newY = y + (that.mouseEvent.getY() - y) * that.speed * delta;
-
-                that.pane.setTranslateX(newX);
-                that.pane.setTranslateY(newY);
-
-                if (Math.abs(newX - x) < 0.01 && Math.abs(newY - y) < 0.01) {
+                if (that.moveTo(that.mouseEvent.getX(), that.mouseEvent.getY(), delta)) {
                     that.timer.stop();
                     that.timer = null;
                 }
@@ -44,11 +36,7 @@ public class PlayerSpaceship extends AbstractSpaceship {
 
     @Override
     public void draw() {
-
         this.pane.setStyle("-fx-background-color: brown");
-
-
-
 
         Rectangle rectangle = new Rectangle();
         rectangle.setHeight(50);
@@ -58,12 +46,22 @@ public class PlayerSpaceship extends AbstractSpaceship {
         rectangle.setFill(Color.PURPLE);
 
         this.pane.getChildren().add(rectangle);
-
     }
 
     @Override
-    public void moveTo(double x, double y) {
+    public boolean moveTo(double toX, double toY, double rate) {
+        double fromX = this.pane.getTranslateX();
+        double fromY = this.pane.getTranslateY();
 
+        double newX = fromX + (toX - fromX) * this.speed * rate;
+        double newY = fromY + (toY - fromY) * this.speed * rate;
+
+        this.pane.setTranslateX(newX);
+        this.pane.setTranslateY(newY);
+
+        System.out.println("Move" + rate);
+
+        return Math.abs(newX - toX) < 0.01 && Math.abs(newY - toY) < 0.01;
     }
 
     @Override
