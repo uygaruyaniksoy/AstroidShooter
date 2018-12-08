@@ -3,7 +3,7 @@ package frontend.controller;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import frontend.Main;
-import frontend.model.entities.GameScreen;
+import frontend.model.enums.GameScreen;
 
 public class MainMenuViewController {
 

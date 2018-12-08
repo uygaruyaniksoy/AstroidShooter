@@ -1,4 +1,4 @@
-package frontend.model.entities;
+package frontend.model.enums;
 
 public enum GameScreen {
     SIGNIN,

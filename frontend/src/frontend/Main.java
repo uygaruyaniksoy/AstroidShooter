@@ -3,7 +3,7 @@ package frontend;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import frontend.model.entities.GameScreen;
+import frontend.model.enums.GameScreen;
 import frontend.view.GameView;
 import frontend.view.MainMenuView;
 

@@ -1,10 +1,11 @@
 package frontend.model.entities;
 
+import frontend.model.enums.AttackType;
+import frontend.util.Scheduler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import frontend.util.Timer;
 
@@ -12,12 +13,32 @@ public class PlayerSpaceship extends AbstractSpaceship {
     private Timer timer;
     private MouseEvent mouseEvent;
 
+    private int speed = 10;
+    private double shootRate = 1;
+    private Scheduler shootScheduler;
 
     public PlayerSpaceship(Stage stage) {
         super(stage);
 
         this.stage.getScene().onMouseMovedProperty().setValue(this::onMouseMoved);
-        this.stage.getScene().onMouseDraggedProperty().setValue(this::onMouseMoved);
+        this.stage.getScene().onMouseDraggedProperty().setValue(this::onMouseDragged);
+        this.stage.getScene().onMousePressedProperty().setValue(this::onMousePressed);
+        this.stage.getScene().onMouseReleasedProperty().setValue(this::onMouseReleased);
+    }
+
+    private void onMouseReleased(MouseEvent mouseEvent) {
+        shootScheduler.stop();
+        shootScheduler = null;
+    }
+
+    private void onMousePressed(MouseEvent mouseEvent) {
+        this.mouseEvent = mouseEvent;
+        attack(AttackType.LIGHT);
+    }
+
+    private void onMouseDragged(MouseEvent mouseEvent) {
+        this.mouseEvent = mouseEvent;
+        onMouseMoved(mouseEvent);
     }
 
     private void onMouseMoved(MouseEvent mouseEvent) {
@@ -100,8 +121,19 @@ public class PlayerSpaceship extends AbstractSpaceship {
     }
 
     @Override
-    public void attack() {
-
+    public void attack(AttackType attackType) {
+        PlayerSpaceship that = this;
+        shootScheduler = new Scheduler(shootRate) {
+            @Override
+            public void execute() {
+                shootAt(that.mouseEvent.getX(), that.mouseEvent.getY(), attackType);
+            }
+        };
+        shootScheduler.start();
     }
 
+    private void shootAt(double x, double y, AttackType attackType) {
+        System.out.println("fire");
+
+    }
 }
