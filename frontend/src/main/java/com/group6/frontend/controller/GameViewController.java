@@ -28,7 +28,6 @@ public class GameViewController extends Timer {
     private Stage stage;
     private Pane pane;
     private Pane healthbar;
-    private FeedbackGradient gradient;
 
     private PlayerSpaceship player;
     private List<GameObject> gameObjects = new ArrayList<>();
@@ -38,7 +37,6 @@ public class GameViewController extends Timer {
     }
 
     public void startGame(MouseEvent mouseEvent) {
-        gradient = new FeedbackGradient(stage);
         player = new PlayerSpaceship(stage);
         gameObjects.add(player);
 

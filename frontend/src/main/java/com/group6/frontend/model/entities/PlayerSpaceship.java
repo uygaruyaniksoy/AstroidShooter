@@ -1,9 +1,12 @@
 package com.group6.frontend.model.entities;
 
 import com.group6.frontend.model.entities.ammos.Rocket;
+import com.group6.frontend.model.entities.enemies.EnemyAI;
 import com.group6.frontend.model.enums.AttackType;
 import com.group6.frontend.util.Position;
 import com.group6.frontend.util.Scheduler;
+import com.group6.frontend.util.Timer;
+import com.group6.frontend.view.FeedbackGradient;
 import javafx.geometry.Insets;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -27,9 +30,11 @@ public class PlayerSpaceship extends GameObject implements Spaceship {
     private double level;
 
     private Pane healthBar;
+    private FeedbackGradient gradient;
 
     public PlayerSpaceship(Stage stage) {
         super(stage, 100);
+        gradient = new FeedbackGradient(stage);
     }
 
     @Override
@@ -79,6 +84,40 @@ public class PlayerSpaceship extends GameObject implements Spaceship {
         this.pane.getChildren().add(bulletRight);
         this.pane.getChildren().add(body);
         this.pane.getChildren().add(hull);
+    }
+
+    @Override
+    public void intersect(GameObject gameObject) {
+        super.intersect(gameObject);
+
+        PlayerSpaceship that = this;
+
+        if (gameObject instanceof EnemyAI) {
+
+            new Scheduler(0.1) {
+                private double delay = 0;
+                @Override
+                public void execute() {
+                    delay += 0.1;
+                    if (this.delay > 1) {
+                        this.stop();
+                        new Scheduler(0.1) {
+                            private double delay = 0;
+                            @Override
+                            public void execute() {
+                                delay += 0.1;
+                                if (this.delay > 1) {
+                                    this.stop();
+                                    return;
+                                }
+                                that.gradient.setColor(Color.RED.interpolate(Color.BLACK, delay));
+                            }
+                        }.start();
+                    }
+                    that.gradient.setColor(Color.BLACK.interpolate(Color.RED, delay));
+                }
+            }.start();
+        }
     }
 
     @Override
