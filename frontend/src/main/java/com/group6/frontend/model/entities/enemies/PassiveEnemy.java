@@ -76,6 +76,8 @@ public class PassiveEnemy extends GameObject implements Spaceship, EnemyAI {
     public void update(double delta) {
         this.pane.setTranslateX(this.pane.getTranslateX());
         this.pane.setTranslateY(this.pane.getTranslateY() - speed * delta);
+        position.setX(this.pane.getTranslateX());
+        position.setY(this.pane.getTranslateY());
     }
 
     @Override

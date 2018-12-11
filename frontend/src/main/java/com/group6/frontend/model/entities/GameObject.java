@@ -1,5 +1,6 @@
 package com.group6.frontend.model.entities;
 
+import com.group6.frontend.util.Position;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -12,6 +13,7 @@ public abstract class GameObject implements IGameObject {
 
     protected int curHealth;
     protected int maxHealth;
+    protected Position position = new Position(0, 0);
 
     public GameObject(Stage stage, int health) {
         this.stage = stage;
@@ -56,6 +58,10 @@ public abstract class GameObject implements IGameObject {
         return curHealth;
     }
 
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
     public void setHealth(int curHealth) {
         this.curHealth = curHealth;
     }
@@ -66,5 +72,13 @@ public abstract class GameObject implements IGameObject {
 
     public void dealDamage(int damage) {
         curHealth -= damage;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public GameObject getSource() {
+        return source;
     }
 }

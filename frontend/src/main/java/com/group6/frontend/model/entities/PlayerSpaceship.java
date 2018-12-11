@@ -2,6 +2,7 @@ package com.group6.frontend.model.entities;
 
 import com.group6.frontend.model.entities.ammos.Rocket;
 import com.group6.frontend.model.enums.AttackType;
+import com.group6.frontend.util.Position;
 import com.group6.frontend.util.Scheduler;
 import javafx.geometry.Insets;
 import javafx.scene.layout.Background;
@@ -22,6 +23,8 @@ public class PlayerSpaceship extends GameObject implements Spaceship {
     private Scheduler shootScheduler;
     private double moveTargetX;
     private double moveTargetY;
+    private double score;
+    private double level;
 
     private Pane healthBar;
 
@@ -92,6 +95,9 @@ public class PlayerSpaceship extends GameObject implements Spaceship {
         double newX = fromX + (moveTargetX - fromX) * this.speed * delta;
         double newY = fromY + (moveTargetY - fromY) * this.speed * delta;
 
+        position.setX(newX);
+        position.setY(newY);
+
         this.pane.setTranslateX(newX);
         this.pane.setTranslateY(newY);
     }
@@ -132,5 +138,21 @@ public class PlayerSpaceship extends GameObject implements Spaceship {
                                 new Stop(healthRatio, Color.RED),
                                 new Stop(1, Color.RED)),
                         new CornerRadii(50), Insets.EMPTY));
+    }
+
+    public double getScore() {
+        return score;
+    }
+
+    public void addScore(double score) {
+        this.score += score;
+    }
+
+    public double getLevel() {
+        return level;
+    }
+
+    public void setLevel(double level) {
+        this.level = level;
     }
 }
