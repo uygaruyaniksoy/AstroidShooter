@@ -3,7 +3,15 @@ package com.group6.frontend.model.entities;
 import com.group6.frontend.model.entities.ammos.Rocket;
 import com.group6.frontend.model.enums.AttackType;
 import com.group6.frontend.util.Scheduler;
+import javafx.geometry.Insets;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
@@ -14,6 +22,8 @@ public class PlayerSpaceship extends GameObject implements Spaceship {
     private Scheduler shootScheduler;
     private double moveTargetX;
     private double moveTargetY;
+
+    private Pane healthBar;
 
     public PlayerSpaceship(Stage stage) {
         super(stage, 100);
@@ -109,5 +119,18 @@ public class PlayerSpaceship extends GameObject implements Spaceship {
 
     public double getShootRate() {
         return shootRate;
+    }
+
+    public Background getHealthBar() {
+        float healthRatio = 1 - ((float) curHealth) / maxHealth;
+        return new Background(
+                new BackgroundFill(
+                        new LinearGradient(0, 0, 0, 1,true,
+                                CycleMethod.NO_CYCLE,
+                                new Stop(0, Color.BLACK),
+                                new Stop(healthRatio - .2, Color.BLACK),
+                                new Stop(healthRatio, Color.RED),
+                                new Stop(1, Color.RED)),
+                        new CornerRadii(50), Insets.EMPTY));
     }
 }

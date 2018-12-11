@@ -8,8 +8,13 @@ import com.group6.frontend.util.Spawner;
 import com.group6.frontend.util.Timer;
 import com.group6.frontend.view.FeedbackGradient;
 import com.group6.frontend.model.enums.AttackType;
+import javafx.geometry.Insets;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -17,6 +22,8 @@ import java.util.List;
 
 public class GameViewController {
     private Stage stage;
+    private Pane pane;
+    private Pane healthbar;
     private FeedbackGradient gradient;
 
     private Timer timer;
@@ -38,8 +45,28 @@ public class GameViewController {
         this.stage.getScene().onMousePressedProperty().setValue(this::onMousePressed);
         this.stage.getScene().onMouseReleasedProperty().setValue(this::onMouseReleased);
 
+        this.pane = ((Pane) stage.getScene().getRoot());
+
+        setHealthBar();
         setEnemySpawner();
         setUpdateGameObjects();
+    }
+
+    private void setHealthBar() {
+        this.healthbar = new Pane();
+        healthbar.setPrefWidth(25);
+        healthbar.prefHeightProperty().bind(stage.heightProperty().divide(4));
+        healthbar.setTranslateX(25);
+        healthbar.translateYProperty().bind(stage.heightProperty().divide(4).multiply(3).subtract(25));
+
+        healthbar.setBorder(new Border(
+                new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID,
+                        new CornerRadii(100),
+                        new BorderWidths(2))));
+
+        healthbar.setBackground(player.getHealthBar());
+
+        this.pane.getChildren().add(healthbar);
     }
 
     private void onMouseReleased(MouseEvent mouseEvent) {
@@ -66,10 +93,10 @@ public class GameViewController {
     }
 
     private void setUpdateGameObjects() {
+        GameViewController that = this;
         timer = new Timer() {
             @Override
             public void update(double delta) {
-                Pane pane = ((Pane) stage.getScene().getRoot());
                 for (int i = 0; i < gameObjects.size(); i++) {
                     GameObject gameObject = gameObjects.get(i);
                     gameObject.update(delta);
@@ -83,15 +110,18 @@ public class GameViewController {
 
                             if (gameObject.isDead()) {
                                 gameObjects.remove(gameObject);
-                                pane.getChildren().remove(gameObject.getRootPane());
+                                that.pane.getChildren().remove(gameObject.getRootPane());
                             }
                             if (otherGameObject.isDead()) {
                                 gameObjects.remove(otherGameObject);
-                                pane.getChildren().remove(otherGameObject.getRootPane());
+                                that.pane.getChildren().remove(otherGameObject.getRootPane());
                             }
                         }
                     }
                 }
+
+
+                that.healthbar.setBackground(player.getHealthBar());
             }
         };
         timer.start();
