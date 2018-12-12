@@ -90,34 +90,41 @@ public class PlayerSpaceship extends GameObject implements Spaceship {
     public void intersect(GameObject gameObject) {
         super.intersect(gameObject);
 
-        PlayerSpaceship that = this;
-
         if (gameObject instanceof EnemyAI) {
 
-            new Scheduler(0.1) {
-                private double delay = 0;
-                @Override
-                public void execute() {
-                    delay += 0.1;
-                    if (this.delay > 1) {
-                        this.stop();
-                        new Scheduler(0.1) {
-                            private double delay = 0;
-                            @Override
-                            public void execute() {
-                                delay += 0.1;
-                                if (this.delay > 1) {
-                                    this.stop();
-                                    return;
-                                }
-                                that.gradient.setColor(Color.RED.interpolate(Color.BLACK, delay));
-                            }
-                        }.start();
-                    }
-                    that.gradient.setColor(Color.BLACK.interpolate(Color.RED, delay));
-                }
-            }.start();
+            clashFeedback();
         }
+    }
+
+    private void clashFeedback() {
+        PlayerSpaceship that = this;
+        new Scheduler(0.01) {
+            private double delay = 0;
+            @Override
+            public void execute() {
+                delay += 0.01;
+                if (this.delay > .5) {
+                    this.stop();
+                    new Scheduler(0.01) {
+                        private double delay = 0;
+                        @Override
+                        public void execute() {
+                            delay += 0.01;
+                            if (this.delay > .5) {
+                                this.stop();
+                                return;
+                            }
+                            that.gradient.setColor(Color.RED.interpolate(Color.BLACK, delay * 2));
+                            that.stage.getScene().getRoot().setTranslateY(Math.sin(Math.PI * delay * 8) * 5 * Math.sin(Math.PI * delay * 8));
+                            that.stage.getScene().getRoot().setTranslateX(Math.sin(Math.PI * delay * 8) * 5 * Math.cos(Math.PI * delay * 8));
+                        }
+                    }.start();
+                }
+                that.gradient.setColor(Color.BLACK.interpolate(Color.RED, delay * 2));
+                that.stage.getScene().getRoot().setTranslateY(Math.sin(Math.PI * delay * 8) * 5 * Math.sin(Math.PI * delay * 8));
+                that.stage.getScene().getRoot().setTranslateX(Math.sin(Math.PI * delay * 8) * 5 * Math.cos(Math.PI * delay * 8));
+            }
+        }.start();
     }
 
     @Override

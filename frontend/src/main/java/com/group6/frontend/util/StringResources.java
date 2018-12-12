@@ -8,7 +8,7 @@ public class StringResources {
 
     public static String getEndGameText() {
         List<String> strings = Arrays.asList("Well... the game is over!",
-                "You don't particularly play well,\n do you.",
+                "You died.",
                 "Everything is over mate.",
                 "Ok, you are done.");
         int i = new Random().nextInt(strings.size());
