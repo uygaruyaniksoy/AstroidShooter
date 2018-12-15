@@ -1,6 +1,8 @@
 package com.group6.frontend.model.entities;
 
+import com.group6.frontend.model.entities.ammos.Ammunition;
 import com.group6.frontend.model.entities.ammos.Rocket;
+import com.group6.frontend.model.entities.enemies.Enemy;
 import com.group6.frontend.model.entities.enemies.EnemyAI;
 import com.group6.frontend.model.enums.AttackType;
 import com.group6.frontend.util.Position;
@@ -22,15 +24,18 @@ import javafx.stage.Stage;
 
 public class PlayerSpaceship extends GameObject implements Spaceship {
     private int speed = 10;
-    private double shootRate = 0.3;
+    private double shootRate = 0.1;
     private Scheduler shootScheduler;
     private double moveTargetX;
     private double moveTargetY;
     private double score;
+    private double killCount;
     private double level;
+    private boolean autoShooting = true;
 
     private Pane healthBar;
     private FeedbackGradient gradient;
+    private int bulletShot = 0;
 
     public PlayerSpaceship(Stage stage) {
         super(stage, 100);
@@ -90,13 +95,19 @@ public class PlayerSpaceship extends GameObject implements Spaceship {
     public void intersect(GameObject gameObject) {
         super.intersect(gameObject);
 
-        if (gameObject instanceof EnemyAI) {
+        if (gameObject instanceof Enemy || (gameObject instanceof Ammunition && gameObject.getSource() instanceof Enemy)) {
 
             clashFeedback();
         }
     }
 
     private void clashFeedback() {
+        PlayerSpaceship that = this;
+        shake();
+        redshift();
+    }
+
+    private void redshift() {
         PlayerSpaceship that = this;
         new Scheduler(0.01) {
             private double delay = 0;
@@ -115,12 +126,37 @@ public class PlayerSpaceship extends GameObject implements Spaceship {
                                 return;
                             }
                             that.gradient.setColor(Color.RED.interpolate(Color.BLACK, delay * 2));
+                        }
+                    }.start();
+                }
+                that.gradient.setColor(Color.BLACK.interpolate(Color.RED, delay * 2));
+            }
+        }.start();
+    }
+
+    private void shake() {
+        PlayerSpaceship that = this;
+        new Scheduler(0.01) {
+            private double delay = 0;
+            @Override
+            public void execute() {
+                delay += 0.01;
+                if (this.delay > .5) {
+                    this.stop();
+                    new Scheduler(0.01) {
+                        private double delay = 0;
+                        @Override
+                        public void execute() {
+                            delay += 0.01;
+                            if (this.delay > .5) {
+                                this.stop();
+                                return;
+                            }
                             that.stage.getScene().getRoot().setTranslateY(Math.sin(Math.PI * delay * 8) * 5 * Math.sin(Math.PI * delay * 8));
                             that.stage.getScene().getRoot().setTranslateX(Math.sin(Math.PI * delay * 8) * 5 * Math.cos(Math.PI * delay * 8));
                         }
                     }.start();
                 }
-                that.gradient.setColor(Color.BLACK.interpolate(Color.RED, delay * 2));
                 that.stage.getScene().getRoot().setTranslateY(Math.sin(Math.PI * delay * 8) * 5 * Math.sin(Math.PI * delay * 8));
                 that.stage.getScene().getRoot().setTranslateX(Math.sin(Math.PI * delay * 8) * 5 * Math.cos(Math.PI * delay * 8));
             }
@@ -154,11 +190,13 @@ public class PlayerSpaceship extends GameObject implements Spaceship {
         int centerY = 25;
         int bulletOffset = 30;
 
-        int gunIndex = (int) (Math.random() * 2) * 2 - 1;
+        int gunIndex = (bulletShot++ % 2) * 2 - 1;
 
-        return new Rocket(stage, this,
+        Rocket rocket = new Rocket(stage, this,
                 pane.getTranslateX() + pane.getLayoutX() + centerX + bulletOffset * gunIndex,
                 pane.getTranslateY() + pane.getLayoutY() + centerY * 2);
+        rocket.setAmmoSpeed(500);
+        return rocket;
     }
 
     public Scheduler getShootScheduler() {
@@ -200,5 +238,21 @@ public class PlayerSpaceship extends GameObject implements Spaceship {
 
     public void setLevel(double level) {
         this.level = level;
+    }
+
+    public boolean isAutoShooting() {
+        return autoShooting;
+    }
+
+    public void increateKillCount() {
+        killCount++;
+    }
+
+    public double getKillCount() {
+        return killCount;
+    }
+
+    public void resetKillCount() {
+        killCount = 0;
     }
 }

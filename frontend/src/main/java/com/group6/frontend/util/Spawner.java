@@ -5,6 +5,6 @@ import com.group6.frontend.model.entities.GameObject;
 public interface Spawner {
     void setSpawnScheduler(Scheduler spawnScheduler);
     Scheduler getSpawnScheduler();
-    GameObject checkAndSpawn(long t);
+    GameObject checkAndSpawn(long t, Class passiveEnemyClass);
     double getSpawnLocation(long t);
 }

@@ -1,5 +1,6 @@
 package com.group6.frontend.model.entities;
 
+import com.group6.frontend.model.enums.AttackType;
 import com.group6.frontend.util.Position;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -13,6 +14,8 @@ public abstract class GameObject implements IGameObject {
 
     protected int curHealth;
     protected int maxHealth;
+    protected int speed;
+    protected AttackType attackType;
     protected Position position = new Position(0, 0);
 
     public GameObject(Stage stage, int health) {
@@ -80,5 +83,13 @@ public abstract class GameObject implements IGameObject {
 
     public GameObject getSource() {
         return source;
+    }
+
+    public AttackType getAttackType() {
+        return attackType;
+    }
+
+    public void setAttackType(AttackType attackType) {
+        this.attackType = attackType;
     }
 }

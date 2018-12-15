@@ -3,12 +3,15 @@ package com.group6.frontend.model.entities.enemies;
 import com.group6.frontend.model.entities.GameObject;
 import com.group6.frontend.model.entities.Spaceship;
 import com.group6.frontend.model.enums.AttackType;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
-public class PassiveEnemy extends GameObject implements Spaceship, EnemyAI {
+public class PassiveEnemy extends Enemy implements Spaceship {
     private int speed = -60;
 
     public PassiveEnemy(Stage stage, double spawnLocation) {
@@ -19,6 +22,18 @@ public class PassiveEnemy extends GameObject implements Spaceship, EnemyAI {
 
     @Override
     public void draw() {
+        // drawNonFancy();
+
+        ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/ships.png")));
+        image.setFitWidth(64);
+        image.setFitHeight(50);
+        image.setViewport(new Rectangle2D(64,72,128, 100));
+        image.setRotate(180);
+        this.pane.getChildren().add(image);
+
+    }
+
+    private void drawNonFancy() {
         int centerX = 40;
         int centerY = 25;
         int hullRadius = 15;
@@ -88,5 +103,10 @@ public class PassiveEnemy extends GameObject implements Spaceship, EnemyAI {
     @Override
     public void updateAI() {
 
+    }
+
+    @Override
+    public boolean shouldAttack(double time) {
+        return false;
     }
 }
