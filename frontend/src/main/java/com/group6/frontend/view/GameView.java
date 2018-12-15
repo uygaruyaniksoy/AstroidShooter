@@ -20,7 +20,7 @@ public class GameView extends AbstractView {
 
     public GameView(Stage stage) {
         super(stage);
-        controller = new GameViewController(stage);
+        controller = new GameViewController(stage );
     }
 
     @Override

@@ -17,7 +17,7 @@ public class LightAttackEnemy extends Enemy implements Spaceship {
     private int bulletShot;
 
     public LightAttackEnemy(Stage stage, double spawnLocation) {
-        super(stage, 10);
+        super(stage, 30);
         this.pane.setTranslateX(spawnLocation);
         this.pane.setTranslateY(-100);
     }

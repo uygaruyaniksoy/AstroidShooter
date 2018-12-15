@@ -45,6 +45,7 @@ public class Rocket extends GameObject implements Ammunition {
     @Override
     public boolean isDead() {
         return super.isDead() ||
-                (this.pane.getTranslateY() + this.pane.getLayoutBounds().getHeight() < 0);
+                (this.pane.getTranslateY() + this.pane.getLayoutBounds().getHeight() < 0) ||
+                (this.pane.getTranslateY() > this.stage.getHeight() + 50);
     }
 }

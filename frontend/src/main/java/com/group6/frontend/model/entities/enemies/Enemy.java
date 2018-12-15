@@ -8,4 +8,9 @@ public abstract class Enemy extends GameObject implements EnemyAI, Spaceship {
     public Enemy(Stage stage, int health) {
         super(stage, health);
     }
+
+    @Override
+    public boolean isDead() {
+        return super.isDead() || (this.pane.getTranslateY() > this.stage.getHeight() + 50);
+    }
 }

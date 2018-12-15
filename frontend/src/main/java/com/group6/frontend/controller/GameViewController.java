@@ -57,9 +57,17 @@ public class GameViewController extends Timer {
         setPlayerShootingScheduler();
         initScoreText();
 
-        player.setLevel(3);
+        player.setLevel(1);
 
-        start(); // start timer so that every frame update function will be called
+//        start(); // start timer so that every frame update function will be called
+
+        GameViewController that = this;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                that.start();
+            }
+        }).start();
     }
 
     private void initScoreText() {
@@ -136,17 +144,18 @@ public class GameViewController extends Timer {
         enemySpawner.setSpawnScheduler(new Scheduler(0.5) {
             @Override
             public void execute() {
+//                System.out.println(count);
                 Enemy enemy;
-                if (player.getKillCount() > 0) {
-//                if (player.getKillCount() > 25) {
+//                if (player.getKillCount() > 0) {
+                if (player.getKillCount() > 25) {
                     enemy = enemySpawner.checkAndSpawn(count*3, enemySpawner.getEnemyTypeByStageAndLevel(1));
                     if (enemy != null) {
                         gameObjects.add(enemy);
                         enemies.add(enemy);
                     }
                 }
-                if (player.getKillCount() > 0) {
-//                if (player.getKillCount() > 100) {
+//                if (player.getKillCount() > 0) {
+                if (player.getKillCount() > 100) {
                     enemy = enemySpawner.checkAndSpawn(count*2, enemySpawner.getEnemyTypeByStageAndLevel(2));
                     if (enemy != null) {
                         gameObjects.add(enemy);
@@ -165,6 +174,7 @@ public class GameViewController extends Timer {
 
     @Override
     public void update(double delta) {
+        System.out.println(delta);
         for (int i = 0; i < gameObjects.size(); i++) {
             GameObject gameObject = gameObjects.get(i);
             gameObject.update(delta);
@@ -179,9 +189,7 @@ public class GameViewController extends Timer {
                         .intersects(otherGameObject.getRootPane().getBoundsInParent()) &&
                         !((gameObject instanceof Enemy && otherGameObject instanceof Ammunition && otherGameObject.getSource() instanceof Enemy) ||
                         (otherGameObject instanceof Enemy && gameObject instanceof Ammunition && gameObject.getSource() instanceof Enemy) ||
-                        (gameObject instanceof Enemy && otherGameObject instanceof Enemy) ||
-                        (otherGameObject instanceof Enemy && gameObject instanceof Enemy))
-
+                        (gameObject instanceof Enemy && otherGameObject instanceof Enemy))
                 ) {
                     gameObject.intersect(otherGameObject);
 
@@ -200,6 +208,8 @@ public class GameViewController extends Timer {
 
         this.healthbar.setBackground(player.getHealthBar());
         this.score.setText("Score: " + (int) player.getScore());
+
+        System.out.println(delta);
 
         if (player.isDead()) {
             finish();
