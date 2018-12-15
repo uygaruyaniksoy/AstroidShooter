@@ -24,7 +24,6 @@ import java.util.*;
 public class Main extends Application {
 
 	private ConfigurableApplicationContext context;
-	private Parent rootNode;
 
 	private static Map<GameScreen, Scene> scenes = new HashMap<>();
 	private static Stack<GameScreen> history = new Stack<>();
@@ -33,15 +32,14 @@ public class Main extends Application {
 	public void init() throws Exception {
 		SpringApplicationBuilder builder = new SpringApplicationBuilder(Main.class);
 		context = builder.run(getParameters().getRaw().toArray(new String[0]));
-		rootNode = new AnchorPane();
 	}
 
 	@Override
 	public void start(Stage stage) throws Exception {
-
-		RestTemplate restTemplate = new RestTemplate();
-        Quote quote = restTemplate.getForObject("http://gturnquist-quoters.cfapps.io/api/random", Quote.class);
-		System.out.println(quote.toString());
+//
+//		RestTemplate restTemplate = new RestTemplate();
+//        Quote quote = restTemplate.getForObject("http://localhost:8080/player/sign_up", Quote.class);
+//		System.out.println(quote.toString());
 
 		// Create and store all scenes up front
 		scenes.put(GameScreen.MAIN_MENU, new MainMenuView(stage).getScene());

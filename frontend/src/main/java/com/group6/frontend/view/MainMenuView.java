@@ -38,17 +38,8 @@ public class MainMenuView extends AbstractView {
         SignupScreen signupScreen = new SignupScreen(tabPane, controller );
         signupScreen.handle();
 
-//        for (int i = 0; i < 2; i++) {
-//            Tab tab = new Tab();
-//            tab.setText("Tab" + i);
-//            tab.setClosable(false);
-//
-//            HBox hbox = new HBox();
-//            hbox.getChildren().add(new Label("Tabbing" + i));
-//            hbox.setAlignment(Pos.CENTER);
-//            tab.setContent(hbox);
-//            tabPane.getTabs().add(tab);
-//        }
+
+
         // bind to take available space
         borderPane.prefHeightProperty().bind(scene.heightProperty());
         borderPane.prefWidthProperty().bind(scene.widthProperty());
