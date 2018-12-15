@@ -1,8 +1,6 @@
 package com.group6.frontend.view;
 
-import com.group6.frontend.controller.GameViewController;
-import com.group6.frontend.controller.MainMenuViewController;
-import javafx.event.ActionEvent;
+import com.group6.frontend.controller.SignupController;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -11,19 +9,18 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Window;
 
-public class SignupScreen {
+public class SignupTab {
 
     private TabPane tabPane;
-    private MainMenuViewController controller;
-    SignupScreen(TabPane tabPane, MainMenuViewController controller) {
-        this.controller = controller;
+    private SignupController controller;
+
+    SignupTab(TabPane tabPane, SignupController controller) {
         this.tabPane = tabPane;
+        this.controller = controller;
     }
 
     public void handle() {
@@ -70,6 +67,7 @@ public class SignupScreen {
         gridPane.add(headerLabel, 0,0,2,1);
         GridPane.setHalignment(headerLabel, HPos.CENTER);
         GridPane.setMargin(headerLabel, new Insets(20, 0,20,0));
+        gridPane.setStyle("-fx-background-color: aqua");
 
         // Add Name Label
         Label nameLabel = new Label("Nick Name : ");

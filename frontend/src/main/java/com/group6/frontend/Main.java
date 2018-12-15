@@ -1,22 +1,15 @@
 package com.group6.frontend;
 
 import com.group6.frontend.model.enums.GameScreen;
+import com.group6.frontend.view.FormsTabView;
 import com.group6.frontend.view.GameView;
 import com.group6.frontend.view.MainMenuView;
 import javafx.application.Application;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
@@ -29,25 +22,22 @@ public class Main extends Application {
 	private static Stack<GameScreen> history = new Stack<>();
 
 	@Override
-	public void init() throws Exception {
+	public void init() {
 		SpringApplicationBuilder builder = new SpringApplicationBuilder(Main.class);
 		context = builder.run(getParameters().getRaw().toArray(new String[0]));
 	}
 
 	@Override
-	public void start(Stage stage) throws Exception {
-//
-//		RestTemplate restTemplate = new RestTemplate();
-//        Quote quote = restTemplate.getForObject("http://localhost:8080/player/sign_up", Quote.class);
-//		System.out.println(quote.toString());
+	public void start(Stage stage) {
 
 		// Create and store all scenes up front
 		scenes.put(GameScreen.MAIN_MENU, new MainMenuView(stage).getScene());
 		scenes.put(GameScreen.GAME, new GameView(stage).getScene());
-
+		scenes.put(GameScreen.FORM, new FormsTabView(stage).getScene());
 		// Start with the main scene
-		stage.setScene(scenes.get(GameScreen.MAIN_MENU));
+//		stage.setSce1ne(scenes.get(GameScreen.MAIN_MENU));
 //		stage.setScene(scenes.get(GameScreen.GAME));
+		stage.setScene(scenes.get(GameScreen.FORM));
 		stage.show();
 	}
 
@@ -62,4 +52,5 @@ public class Main extends Application {
 	public void stop() throws Exception {
 		context.close();
 	}
+
 }
