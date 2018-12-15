@@ -38,8 +38,6 @@ public class MainMenuView extends AbstractView {
         SignupScreen signupScreen = new SignupScreen(tabPane, controller );
         signupScreen.handle();
 
-
-
         // bind to take available space
         borderPane.prefHeightProperty().bind(scene.heightProperty());
         borderPane.prefWidthProperty().bind(scene.widthProperty());
