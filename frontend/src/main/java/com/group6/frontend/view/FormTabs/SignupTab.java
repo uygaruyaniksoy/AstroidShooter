@@ -1,4 +1,4 @@
-package com.group6.frontend.view;
+package com.group6.frontend.view.FormTabs;
 
 import com.group6.frontend.controller.SignupController;
 import javafx.event.EventHandler;
@@ -18,7 +18,7 @@ public class SignupTab {
     private TabPane tabPane;
     private SignupController controller;
 
-    SignupTab(TabPane tabPane, SignupController controller) {
+    public SignupTab(TabPane tabPane, SignupController controller) {
         this.tabPane = tabPane;
         this.controller = controller;
     }

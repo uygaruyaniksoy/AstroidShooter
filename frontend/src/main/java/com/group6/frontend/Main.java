@@ -3,6 +3,7 @@ package com.group6.frontend;
 import com.group6.frontend.model.enums.GameScreen;
 import com.group6.frontend.view.FormsTabView;
 import com.group6.frontend.view.GameView;
+import com.group6.frontend.view.LeaderBoardView;
 import com.group6.frontend.view.MainMenuView;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -34,10 +35,10 @@ public class Main extends Application {
 		scenes.put(GameScreen.MAIN_MENU, new MainMenuView(stage).getScene());
 		scenes.put(GameScreen.GAME, new GameView(stage).getScene());
 		scenes.put(GameScreen.FORM, new FormsTabView(stage).getScene());
+		scenes.put(GameScreen.LEADERBOARD,new LeaderBoardView(stage).getScene());
 		// Start with the main scene
-//		stage.setSce1ne(scenes.get(GameScreen.MAIN_MENU));
-//		stage.setScene(scenes.get(GameScreen.GAME));
-		stage.setScene(scenes.get(GameScreen.FORM));
+		stage.setScene(scenes.get(GameScreen.MAIN_MENU));
+
 		stage.show();
 	}
 

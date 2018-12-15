@@ -1,4 +1,4 @@
-package com.group6.frontend.view;
+package com.group6.frontend.view.FormTabs;
 
 import com.group6.frontend.controller.SigninController;
 import com.group6.frontend.controller.SignupController;
@@ -28,7 +28,17 @@ public class SigninTab {
         Tab tab = new Tab();
         tab.setText("Sign in");
         tab.setClosable(false);
-        tab.contextMenuProperty();
+
+//TODO: ekle
+//        tabPresentation.setOnSelectionChanged(new EventHandler<Event>() {
+//            @Override
+//            public void handle(Event t) {
+//                if (tabPresentation.isSelected()) {
+//                    comboBoxPresYear.setVisible(true);
+//                    lblPresYear.setVisible(true);
+//                }
+//            }
+//        });
 
         GridPane gridPane = new GridPane();
         // Position the pane at the center of the screen, both vertically and horizontally

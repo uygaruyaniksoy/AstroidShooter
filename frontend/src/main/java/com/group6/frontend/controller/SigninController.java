@@ -52,7 +52,7 @@ public class SigninController {
 
             if(response.getStatusCode() == HttpStatus.OK) {
                 showAlertClass.showAlert(Alert.AlertType.CONFIRMATION, gridPane.getScene().getWindow(), "Authentication Successful!", "Welcome ");
-                stage.setScene(Main.getScenes().get(GameScreen.GAME));
+                stage.setScene(Main.getScenes().get(GameScreen.MAIN_MENU));
             }
 
         }
