@@ -8,5 +8,6 @@ public enum GameScreen {
     LEADERBOARD,
     PREGAME,
     GAME,
-    POSTGAME
+    POSTGAME,
+    FORM
 }
