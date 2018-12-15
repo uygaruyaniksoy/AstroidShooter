@@ -2,6 +2,9 @@ package com.group6.frontend.view;
 
 import com.group6.frontend.controller.SigninController;
 import com.group6.frontend.controller.SignupController;
+import com.group6.frontend.view.AbstractView;
+import com.group6.frontend.view.FormTabs.SigninTab;
+import com.group6.frontend.view.FormTabs.SignupTab;
 import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
@@ -17,7 +20,6 @@ public class FormsTabView extends AbstractView {
     public Scene getScene() {
         Scene scene = super.getScene();
         Pane root = (Pane) scene.getRoot();
-
 
         TabPane tabPane = new TabPane();
         BorderPane borderPane = new BorderPane();
