@@ -26,7 +26,7 @@ public class Main extends Application {
 	private ConfigurableApplicationContext context;
 	private Parent rootNode;
 
-		private static Map<GameScreen, Scene> scenes = new HashMap<>();
+	private static Map<GameScreen, Scene> scenes = new HashMap<>();
 	private static Stack<GameScreen> history = new Stack<>();
 
 	@Override
@@ -35,7 +35,6 @@ public class Main extends Application {
 		context = builder.run(getParameters().getRaw().toArray(new String[0]));
 		rootNode = new AnchorPane();
 	}
-
 
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -66,38 +65,3 @@ public class Main extends Application {
 		context.close();
 	}
 }
-
-//public class Main extends Application {
-//	private static Map<GameScreen, Scene> scenes = new HashMap<>();
-//	private static Stack<GameScreen> history = new Stack<>();
-//
-//
-//	@Override
-//	public void start(Stage stage) {
-//
-//		RestTemplate restTemplate = new RestTemplate();
-//		Quote quote = restTemplate.getForObject("http://gturnquist-quoters.cfapps.io/api/random", Quote.class);
-//
-//		// Create and store all scenes up front
-//		scenes.put(GameScreen.MAIN_MENU, new MainMenuView(stage).getScene());
-//		scenes.put(GameScreen.GAME, new GameView(stage).getScene());
-//
-//		// Start with the main scene
-////		stage.setScene(scenes.get(GameScreen.MAIN_MENU));
-//		stage.setScene(scenes.get(GameScreen.GAME));
-//		stage.show();
-//	}
-//
-//	/** Returns a Map of the scenes by {@link GameScreen} */
-//	public static Map<GameScreen, Scene> getScenes() {
-//		return scenes;
-//	}
-//
-//    public static void main(String[] args) {
-////		RestTemplate restTemplate = new RestTemplate();
-////		Quote quote = restTemplate.getForObject("http://gturnquist-quoters.cfapps.io/api/random", Quote.class);
-////		System.out.println(quote.toString());
-//
-//		launch(args);
-//    }
-//}
