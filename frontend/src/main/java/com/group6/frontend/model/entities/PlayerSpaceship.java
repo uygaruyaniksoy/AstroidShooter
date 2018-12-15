@@ -24,7 +24,7 @@ import javafx.stage.Stage;
 
 public class PlayerSpaceship extends GameObject implements Spaceship {
     private int speed = 10;
-    private double shootRate = 0.4;
+    private double shootRate = 0.1;
     private Scheduler shootScheduler;
     private double moveTargetX;
     private double moveTargetY;
@@ -39,6 +39,10 @@ public class PlayerSpaceship extends GameObject implements Spaceship {
 
     public PlayerSpaceship(Stage stage) {
         super(stage, 100);
+        drawGradient();
+    }
+
+    public void drawGradient() {
         gradient = new FeedbackGradient(stage);
     }
 

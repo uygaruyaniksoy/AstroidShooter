@@ -4,24 +4,23 @@ import com.group6.frontend.model.entities.GameObject;
 import com.group6.frontend.model.entities.PlayerSpaceship;
 import com.group6.frontend.model.entities.ammos.Ammunition;
 import com.group6.frontend.model.entities.enemies.Enemy;
-import com.group6.frontend.model.entities.enemies.LightAttackEnemy;
-import com.group6.frontend.model.entities.enemies.PassiveEnemy;
-import com.group6.frontend.util.*;
-import com.group6.frontend.view.FeedbackGradient;
 import com.group6.frontend.model.enums.AttackType;
+import com.group6.frontend.util.EnemySpawner;
+import com.group6.frontend.util.Scheduler;
+import com.group6.frontend.util.StringResources;
+import com.group6.frontend.util.Timer;
 import javafx.geometry.Bounds;
-import javafx.geometry.Insets;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.CycleMethod;
-import javafx.scene.paint.LinearGradient;
-import javafx.scene.paint.Stop;
-import javafx.scene.text.*;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,12 +29,14 @@ public class GameViewController extends Timer {
     private Pane pane;
     private Pane healthbar;
     private Text score;
+    private Text timeView;
 
     private PlayerSpaceship player;
     private List<GameObject> gameObjects = new ArrayList<>();
     private List<Enemy> enemies = new ArrayList<>();
     private EnemySpawner enemySpawner;
     private int count;
+    private double time = 60.0;
 
     public GameViewController(Stage stage) {
         this.stage = stage;
@@ -55,22 +56,14 @@ public class GameViewController extends Timer {
         setHealthBar();
         startEnemySpawner();
         setPlayerShootingScheduler();
-        initScoreText();
+        initScoreTextAndTime();
 
         player.setLevel(1);
 
-//        start(); // start timer so that every frame update function will be called
-
-        GameViewController that = this;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                that.start();
-            }
-        }).start();
+        start(); // start timer so that every frame update function will be called
     }
 
-    private void initScoreText() {
+    private void initScoreTextAndTime() {
         score = new Text("Score: " + (((int) player.getScore())));
         score.setFont(Font.font("Verdana", FontWeight.BOLD,36));
         score.setFill(Color.DARKORCHID);
@@ -79,8 +72,19 @@ public class GameViewController extends Timer {
         score.setTextAlignment(TextAlignment.LEFT);
 
         score.translateXProperty().set(20);
-        score.translateYProperty().set(40);
+        score.translateYProperty().set(80);
         pane.getChildren().add(score);
+
+        timeView = new Text("Score: " + time);
+        timeView.setFont(Font.font("Verdana", FontWeight.BOLD,36));
+        timeView.setFill(Color.DARKORCHID);
+        timeView.setStrokeWidth(3);
+        timeView.setStroke(Color.BLACK);
+        timeView.setTextAlignment(TextAlignment.LEFT);
+
+        timeView.translateXProperty().set(20);
+        timeView.translateYProperty().set(40);
+        pane.getChildren().add(timeView);
     }
 
     private void setPlayerShootingScheduler() {
@@ -175,14 +179,12 @@ public class GameViewController extends Timer {
     @Override
     public void update(double delta) {
         System.out.println(delta);
+        System.out.println(gameObjects.size());
         for (int i = 0; i < gameObjects.size(); i++) {
             GameObject gameObject = gameObjects.get(i);
             gameObject.update(delta);
             for (int j = i + 1; j < gameObjects.size(); j++) {
                 GameObject otherGameObject = gameObjects.get(j);
-                if (gameObject.isDead()) {
-                    gameObjects.remove(gameObject);
-                }
                 if (gameObject
                         .getRootPane()
                         .getBoundsInParent()
@@ -206,25 +208,82 @@ public class GameViewController extends Timer {
             }
         }
 
+        for (int i = 0; i < gameObjects.size(); i++) {
+            GameObject gameObject = gameObjects.get(i);
+            if (gameObject.isDead()) {
+                gameObjects.remove(gameObject);
+                if (gameObject instanceof Enemy) enemies.remove(gameObject);
+                this.pane.getChildren().remove(gameObject.getRootPane());
+                i--;
+            }
+        }
+
         this.healthbar.setBackground(player.getHealthBar());
         this.score.setText("Score: " + (int) player.getScore());
+        this.timeView.setText("Time: " + new DecimalFormat("##,##").format(time));
 
-        System.out.println(delta);
+        time -= delta;
 
         if (player.isDead()) {
             finish();
+        } else if (time < 0) {
+            endLevel();
         }
     }
 
+    private void endLevel() {
+        if (player.getLevel() == 3) {
+            gameOver();
+        }
+        GameViewController that = this;
+        this.pane.getChildren().removeIf(node -> node != that.player.getRootPane());
+        enemies.clear();
+        gameObjects.clear();
+        gameObjects.add(player);
+        player.setLevel(player.getLevel() + 1);
+
+        player.getShootScheduler().stop();
+        enemySpawner.getSpawnScheduler().stop();
+        stop();
+
+        Text text = new Text("Get ready for next level");
+        text.translateXProperty().bind(stage.widthProperty().divide(2).subtract(text.getLayoutBounds().getWidth()));
+        text.translateYProperty().bind(stage.heightProperty().divide(2).subtract(20));
+
+        Button nextLevel = new Button("next level");
+        nextLevel.translateXProperty().bind(stage.widthProperty().divide(2).subtract(nextLevel.getLayoutBounds().getWidth()));
+        nextLevel.translateYProperty().bind(stage.heightProperty().divide(2));
+        nextLevel.setOnMouseClicked(mouseEvent -> {
+            player.getShootScheduler().start();
+            enemySpawner.getSpawnScheduler().start();
+            that.start();
+            that.time = 60;
+
+            that.pane.getChildren().remove(nextLevel);
+            that.pane.getChildren().remove(text);
+
+            that.setHealthBar();
+            that.enemySpawner.getSpawnScheduler().start();
+            that.player.getShootScheduler().start();
+            that.initScoreTextAndTime();
+            that.player.drawGradient();
+
+            that.count = 0;
+            that.player.resetKillCount();
+        });
+
+        this.pane.getChildren().add(text);
+        this.pane.getChildren().add(nextLevel);
+    }
+
+    private void gameOver() {
+        System.out.println("gameover");
+    }
+
     private void checkKill(GameObject gameObject, GameObject otherGameObject) {
-        if (otherGameObject.isDead()) {
-            gameObjects.remove(otherGameObject);
-            if (otherGameObject instanceof Enemy) enemies.remove(otherGameObject);
-            this.pane.getChildren().remove(otherGameObject.getRootPane());
-            if (gameObject.getSource() == player) {
-                player.addScore(otherGameObject.getMaxHealth());
-                player.increateKillCount();
-            }
+        if (otherGameObject.isDead() && gameObject.getSource() == player) {
+            player.addScore(otherGameObject.getMaxHealth());
+            player.increateKillCount();
         }
     }
 
