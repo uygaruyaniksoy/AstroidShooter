@@ -1,6 +1,6 @@
 package com.group6.frontend.controller;
 import com.group6.frontend.Main;
-import com.group6.frontend.model.entities.webConsumer.PlayerSignInDTO;
+import com.group6.frontend.model.entities.webConsumer.PlayerSigninDTO;
 import com.group6.frontend.model.enums.GameScreen;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -34,7 +34,7 @@ public class MainMenuViewController {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("x-access-token",Main.TOKEN);
 
-        HttpEntity<PlayerSignInDTO> request = new HttpEntity<>(headers);
+        HttpEntity<PlayerSigninDTO> request = new HttpEntity<>(headers);
 
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity response = restTemplate.exchange(resourceUrl+"player/sign_out",HttpMethod.DELETE,request,String.class );

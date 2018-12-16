@@ -5,7 +5,6 @@ import com.group6.frontend.model.entities.GameObject;
 import com.group6.frontend.model.entities.PlayerSpaceship;
 import com.group6.frontend.model.entities.ammos.Ammunition;
 import com.group6.frontend.model.entities.enemies.Enemy;
-import com.group6.frontend.model.entities.webConsumer.PlayerSignInDTO;
 import com.group6.frontend.model.entities.webConsumer.ScoreBoardDTO;
 import com.group6.frontend.model.enums.AttackType;
 import com.group6.frontend.model.enums.GameScreen;
@@ -26,7 +25,6 @@ import javafx.stage.Stage;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -304,7 +302,7 @@ public class GameViewController extends Timer {
 
         Button mainMenu = new Button("Main Menu");
         Bounds bounds = mainMenu.getLayoutBounds();
-        mainMenu.translateXProperty().bind(stage.widthProperty().subtract(bounds.getWidth() / 2).divide(2));
+        mainMenu.translateXProperty().bind(stage.widthProperty().divide(2).subtract(bounds.getWidth() / 2));
         mainMenu.translateYProperty().bind(stage.heightProperty().divide(4).multiply(3));
         mainMenu.setOnMouseClicked(e -> {
             stage.setScene(Main.getScenes().get(GameScreen.MAIN_MENU));
@@ -322,12 +320,9 @@ public class GameViewController extends Timer {
         HttpEntity<ScoreBoardDTO> request = new HttpEntity<>(body, headers);
 
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<ScoreBoardDTO> exchange = restTemplate.exchange(
-                resourceUrl + "scoreboard/update", HttpMethod.POST, request, ScoreBoardDTO.class);
+        restTemplate.exchange(
+                resourceUrl + "scoreboard/update", HttpMethod.POST, request, Void.class);
 
-        if (exchange.getStatusCode() == HttpStatus.OK) {
-            System.out.println("ok");
-        }
     }
 
     private void checkKill(GameObject gameObject, GameObject otherGameObject) {

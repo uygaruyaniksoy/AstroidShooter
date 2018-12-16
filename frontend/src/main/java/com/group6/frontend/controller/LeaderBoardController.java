@@ -2,8 +2,6 @@ package com.group6.frontend.controller;
 
 import com.group6.frontend.Main;
 import com.group6.frontend.model.entities.webConsumer.LeaderBoardDTO;
-import com.group6.frontend.model.entities.webConsumer.PlayerSignInDTO;
-import com.group6.frontend.model.enums.GameScreen;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 import org.springframework.core.ParameterizedTypeReference;
@@ -11,7 +9,6 @@ import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class LeaderBoardController {
     Stage stage;
