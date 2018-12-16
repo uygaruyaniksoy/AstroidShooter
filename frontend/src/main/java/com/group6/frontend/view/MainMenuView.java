@@ -34,7 +34,7 @@ public class MainMenuView extends AbstractView {
 
         Button leaderboardButton = new Button("LeaderBoard");
         vbox.getChildren().add(leaderboardButton);
-        startButton.addEventHandler(MouseEvent.MOUSE_CLICKED, controller::openLaderBoardHandler);
+        leaderboardButton.addEventHandler(MouseEvent.MOUSE_CLICKED, controller::openLaderBoardHandler);
 
         Button signoutButton = new Button("Sign out");
         vbox.getChildren().add(signoutButton);

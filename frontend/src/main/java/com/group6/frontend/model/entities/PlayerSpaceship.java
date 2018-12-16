@@ -24,7 +24,7 @@ import javafx.stage.Stage;
 
 public class PlayerSpaceship extends GameObject implements Spaceship {
     private int speed = 10;
-    private double shootRate = 0.1;
+    private double shootRate = 0.2;
     private Scheduler shootScheduler;
     private double moveTargetX;
     private double moveTargetY;

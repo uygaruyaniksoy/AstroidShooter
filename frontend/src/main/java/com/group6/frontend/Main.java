@@ -23,6 +23,12 @@ public class Main extends Application {
 
 	private static Map<GameScreen, Scene> scenes = new HashMap<>();
 	private static Stack<GameScreen> history = new Stack<>();
+	private static Stage stage;
+
+	public static void resetGameView() {
+		scenes.remove(GameScreen.GAME);
+		scenes.put(GameScreen.GAME, new GameView(stage).getScene());
+	}
 
 	@Override
 	public void init() {
@@ -32,6 +38,7 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage stage) {
+		Main.stage = stage;
 
 		// Create and store all scenes up front
 		scenes.put(GameScreen.MAIN_MENU, new MainMenuView(stage).getScene());
@@ -40,6 +47,7 @@ public class Main extends Application {
 		scenes.put(GameScreen.LEADERBOARD, new LeaderBoardTabView(stage).getScene());
 		// Start with the main scene
 		stage.setScene(scenes.get(GameScreen.FORM));
+//		stage.setScene(scenes.get(GameScreen.GAME));
 
 		stage.show();
 	}

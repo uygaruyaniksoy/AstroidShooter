@@ -45,9 +45,17 @@ public class EnemySpawner implements Spawner {
         return spawnScheduler;
     }
 
+    /**
+     * Spawns the enemies according to a mathematical formula so it will generate same enemies at the same locations every
+     * time you play so it's fair.
+     *
+     * @param t the time at you are querying the scheduler
+     * @param enemyType what kind of an enemy you want to instantiate
+     * @return created enemy, null if nothing is created
+     */
     @Override
     public Enemy checkAndSpawn(long t, Class enemyType) {
-        if ((Math.sin(t) - Math.min(Math.cos(t / 3. + Math.PI) * Math.sqrt(t), 0)) < 0) return null;
+        if ((Math.sin(t) - Math.min(Math.cos(t / 3. + Math.PI) * Math.sqrt(t / 10.), 0)) < 0) return null;
         try {
             return (Enemy) enemyType.getConstructor(Stage.class, double.class).newInstance(stage, getSpawnLocation(t));
         } catch (Exception e) {

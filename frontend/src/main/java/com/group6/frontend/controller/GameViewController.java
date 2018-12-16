@@ -1,10 +1,14 @@
 package com.group6.frontend.controller;
 
+import com.group6.frontend.Main;
 import com.group6.frontend.model.entities.GameObject;
 import com.group6.frontend.model.entities.PlayerSpaceship;
 import com.group6.frontend.model.entities.ammos.Ammunition;
 import com.group6.frontend.model.entities.enemies.Enemy;
+import com.group6.frontend.model.entities.webConsumer.PlayerSignInDTO;
+import com.group6.frontend.model.entities.webConsumer.ScoreBoardDTO;
 import com.group6.frontend.model.enums.AttackType;
+import com.group6.frontend.model.enums.GameScreen;
 import com.group6.frontend.util.EnemySpawner;
 import com.group6.frontend.util.Scheduler;
 import com.group6.frontend.util.StringResources;
@@ -19,7 +23,10 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import org.springframework.http.*;
+import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +38,14 @@ public class GameViewController extends Timer {
     private Text score;
     private Text timeView;
 
+    private final String resourceUrl = "http://localhost:8080/";
+
     private PlayerSpaceship player;
     private List<GameObject> gameObjects = new ArrayList<>();
     private List<Enemy> enemies = new ArrayList<>();
     private EnemySpawner enemySpawner;
     private int count;
-    private double time = 60.0;
+    private double time = 5.0;
 
     public GameViewController(Stage stage) {
         this.stage = stage;
@@ -58,7 +67,7 @@ public class GameViewController extends Timer {
         setPlayerShootingScheduler();
         initScoreTextAndTime();
 
-        player.setLevel(1);
+        player.setLevel(3);
 
         start(); // start timer so that every frame update function will be called
     }
@@ -148,9 +157,9 @@ public class GameViewController extends Timer {
         enemySpawner.setSpawnScheduler(new Scheduler(0.5) {
             @Override
             public void execute() {
-//                System.out.println(count);
+                // don't spawn new enemies if there are already 20 or more, let the player kill some
+                if (enemies.size() > 20) return;
                 Enemy enemy;
-//                if (player.getKillCount() > 0) {
                 if (player.getKillCount() > 25) {
                     enemy = enemySpawner.checkAndSpawn(count*3, enemySpawner.getEnemyTypeByStageAndLevel(1));
                     if (enemy != null) {
@@ -158,7 +167,6 @@ public class GameViewController extends Timer {
                         enemies.add(enemy);
                     }
                 }
-//                if (player.getKillCount() > 0) {
                 if (player.getKillCount() > 100) {
                     enemy = enemySpawner.checkAndSpawn(count*2, enemySpawner.getEnemyTypeByStageAndLevel(2));
                     if (enemy != null) {
@@ -178,8 +186,6 @@ public class GameViewController extends Timer {
 
     @Override
     public void update(double delta) {
-        System.out.println(delta);
-        System.out.println(gameObjects.size());
         for (int i = 0; i < gameObjects.size(); i++) {
             GameObject gameObject = gameObjects.get(i);
             gameObject.update(delta);
@@ -234,6 +240,7 @@ public class GameViewController extends Timer {
     private void endLevel() {
         if (player.getLevel() == 3) {
             gameOver();
+            return;
         }
         GameViewController that = this;
         this.pane.getChildren().removeIf(node -> node != that.player.getRootPane());
@@ -247,6 +254,11 @@ public class GameViewController extends Timer {
         stop();
 
         Text text = new Text("Get ready for next level");
+        text.setFont(Font.font("Verdana", FontWeight.BOLD,36));
+        text.setFill(Color.DARKORCHID);
+        text.setTextAlignment(TextAlignment.CENTER);
+        text.setStrokeWidth(3);
+        text.setStroke(Color.BLACK);
         text.translateXProperty().bind(stage.widthProperty().divide(2).subtract(text.getLayoutBounds().getWidth()));
         text.translateYProperty().bind(stage.heightProperty().divide(2).subtract(20));
 
@@ -277,7 +289,45 @@ public class GameViewController extends Timer {
     }
 
     private void gameOver() {
-        System.out.println("gameover");
+
+        player.getShootScheduler().stop();
+        enemySpawner.getSpawnScheduler().stop();
+        stop();
+
+        Text text = new Text("Game is over and you have won!!");
+        text.setFont(Font.font("Verdana", FontWeight.BOLD,36));
+        text.setFill(Color.DARKORCHID);
+        text.setStrokeWidth(3);
+        text.setStroke(Color.BLACK);
+        text.translateXProperty().bind(stage.widthProperty().divide(2).subtract(text.getLayoutBounds().getWidth() / 2));
+        text.translateYProperty().bind(stage.heightProperty().divide(2).subtract(20));
+
+        Button mainMenu = new Button("Main Menu");
+        Bounds bounds = mainMenu.getLayoutBounds();
+        mainMenu.translateXProperty().bind(stage.widthProperty().subtract(bounds.getWidth() / 2).divide(2));
+        mainMenu.translateYProperty().bind(stage.heightProperty().divide(4).multiply(3));
+        mainMenu.setOnMouseClicked(e -> {
+            stage.setScene(Main.getScenes().get(GameScreen.MAIN_MENU));
+            Main.resetGameView();
+        });
+
+        pane.getChildren().add(mainMenu);
+        pane.getChildren().add(text);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("x-access-token",Main.TOKEN);
+
+        ScoreBoardDTO body = new ScoreBoardDTO((int) player.getScore());
+        HttpEntity<ScoreBoardDTO> request = new HttpEntity<>(body, headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<ScoreBoardDTO> exchange = restTemplate.exchange(
+                resourceUrl + "scoreboard/update", HttpMethod.POST, request, ScoreBoardDTO.class);
+
+        if (exchange.getStatusCode() == HttpStatus.OK) {
+            System.out.println("ok");
+        }
     }
 
     private void checkKill(GameObject gameObject, GameObject otherGameObject) {
@@ -312,6 +362,17 @@ public class GameViewController extends Timer {
         scoreText.translateXProperty().bind(stage.widthProperty().subtract(bounds.getWidth()).divide(2));
         scoreText.translateYProperty().bind(stage.heightProperty().subtract(bounds.getHeight()).divide(1.66));
         pane.getChildren().add(scoreText);
+
+        Button mainMenu = new Button("Main Menu");
+        bounds = mainMenu.getLayoutBounds();
+        mainMenu.translateXProperty().bind(stage.widthProperty().subtract(bounds.getWidth()).divide(2));
+        mainMenu.translateYProperty().bind(stage.heightProperty().divide(4).multiply(3));
+        mainMenu.setOnMouseClicked(e -> {
+            stage.setScene(Main.getScenes().get(GameScreen.MAIN_MENU));
+            Main.resetGameView();
+        });
+        pane.getChildren().add(mainMenu);
+
 
         System.out.println("fin");
 

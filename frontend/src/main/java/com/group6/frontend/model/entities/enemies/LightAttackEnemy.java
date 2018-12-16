@@ -17,7 +17,7 @@ public class LightAttackEnemy extends Enemy implements Spaceship {
     private int bulletShot;
 
     public LightAttackEnemy(Stage stage, double spawnLocation) {
-        super(stage, 30);
+        super(stage, 20);
         this.pane.setTranslateX(spawnLocation);
         this.pane.setTranslateY(-100);
     }
@@ -57,7 +57,10 @@ public class LightAttackEnemy extends Enemy implements Spaceship {
 
     @Override
     public boolean shouldAttack(double time) {
-        if (time % 10 == 0) return true;
+        if (this.lastAttackTime != time && Math.floor(Math.random() * 1500) == 0) {
+            lastAttackTime = time;
+            return true;
+        }
         return false;
     }
 

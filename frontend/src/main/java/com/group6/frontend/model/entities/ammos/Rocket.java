@@ -2,11 +2,16 @@ package com.group6.frontend.model.entities.ammos;
 
 import com.group6.frontend.model.entities.GameObject;
 import javafx.geometry.Bounds;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class Rocket extends GameObject implements Ammunition {
+    private ImageView image;
+
     public Rocket(Stage stage, GameObject source, double x, double y) {
         super(stage, 20);
 
@@ -18,15 +23,11 @@ public class Rocket extends GameObject implements Ammunition {
 
     @Override
     public void draw() {
-        int bulletWidth = 10;
-        int bulletHeight = 25;
-
-        Rectangle rect = new Rectangle();
-        rect.setWidth(bulletWidth);
-        rect.setHeight(bulletHeight);
-        rect.setFill(Color.DARKORCHID);
-
-        this.pane.getChildren().add(rect);
+        image = new ImageView(new Image(getClass().getResourceAsStream("/ships.png")));
+        image.setFitWidth(28);
+        image.setFitHeight(65);
+        image.setViewport(new Rectangle2D(320,415,28, 65));
+        this.pane.getChildren().add(image);
     }
 
     @Override
@@ -40,6 +41,9 @@ public class Rocket extends GameObject implements Ammunition {
     @Override
     public void setAmmoSpeed(int speed) {
         this.speed = speed;
+        if (speed < 0) {
+            image.setRotate(180);
+        }
     }
 
     @Override
