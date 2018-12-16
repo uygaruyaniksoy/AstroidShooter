@@ -29,17 +29,6 @@ public class SigninTab {
         tab.setText("Sign in");
         tab.setClosable(false);
 
-//TODO: ekle
-//        tabPresentation.setOnSelectionChanged(new EventHandler<Event>() {
-//            @Override
-//            public void handle(Event t) {
-//                if (tabPresentation.isSelected()) {
-//                    comboBoxPresYear.setVisible(true);
-//                    lblPresYear.setVisible(true);
-//                }
-//            }
-//        });
-
         GridPane gridPane = new GridPane();
         // Position the pane at the center of the screen, both vertically and horizontally
         gridPane.setAlignment(Pos.CENTER);
@@ -73,7 +62,7 @@ public class SigninTab {
 
     private void addUIControls(GridPane gridPane) {
         // Add Header
-        Label headerLabel = new Label("Authetication Form");
+        Label headerLabel = new Label("Authentication Form");
         headerLabel.setFont(Font.font("Arial", FontWeight.BOLD, 24));
         gridPane.add(headerLabel, 0,0,2,1);
         GridPane.setHalignment(headerLabel, HPos.CENTER);
@@ -115,6 +104,4 @@ public class SigninTab {
             }
         });
     }
-
-
 }

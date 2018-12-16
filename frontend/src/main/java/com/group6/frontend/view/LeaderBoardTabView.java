@@ -1,12 +1,9 @@
 package com.group6.frontend.view;
 
 import com.group6.frontend.controller.LeaderBoardController;
-import com.group6.frontend.controller.SigninController;
-import com.group6.frontend.controller.SignupController;
-import com.group6.frontend.view.AbstractView;
-import com.group6.frontend.view.FormTabs.SigninTab;
-import com.group6.frontend.view.FormTabs.SignupTab;
+import com.group6.frontend.view.LeaderBoardTabs.DailyLeaderBoardTab;
 import com.group6.frontend.view.LeaderBoardTabs.GeneralLeaderBoardTab;
+import com.group6.frontend.view.LeaderBoardTabs.WeeklyLeaderBoardTab;
 import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
@@ -27,8 +24,15 @@ public class LeaderBoardTabView extends AbstractView {
         BorderPane borderPane = new BorderPane();
 
         LeaderBoardController leaderBoardController = new LeaderBoardController(stage);
+
         GeneralLeaderBoardTab generalLeaderBoardTab = new GeneralLeaderBoardTab(tabPane,leaderBoardController);
         generalLeaderBoardTab.handle();
+
+        DailyLeaderBoardTab dailyLeaderBoardTab = new DailyLeaderBoardTab(tabPane,leaderBoardController);
+        dailyLeaderBoardTab.handle();
+
+        WeeklyLeaderBoardTab weeklyLeaderBoardTab = new WeeklyLeaderBoardTab(tabPane,leaderBoardController);
+        weeklyLeaderBoardTab.handle();
 
         // bind to take available space
         borderPane.prefHeightProperty().bind(scene.heightProperty());

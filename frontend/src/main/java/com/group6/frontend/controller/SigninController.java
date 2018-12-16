@@ -33,7 +33,6 @@ public class SigninController {
         }
         else if (passwordField.getText().isEmpty()) {
             showAlertClass.showAlert(Alert.AlertType.ERROR, window, "Form Error!", "Please enter a password");
-
         }
         else {
 
