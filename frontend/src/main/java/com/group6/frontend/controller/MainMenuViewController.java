@@ -1,6 +1,6 @@
 package com.group6.frontend.controller;
 import com.group6.frontend.Main;
-import com.group6.frontend.model.entities.webConsumer.PlayerSigninDTO;
+import com.group6.frontend.model.entities.webConsumer.PlayerSignInDTO;
 import com.group6.frontend.model.enums.GameScreen;
 import javafx.stage.Stage;
 import org.springframework.http.*;
@@ -32,7 +32,7 @@ public class MainMenuViewController {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("x-access-token",Main.TOKEN);
 
-        HttpEntity<PlayerSigninDTO> request = new HttpEntity<>(headers);
+        HttpEntity<PlayerSignInDTO> request = new HttpEntity<>(headers);
 
         RestTemplate restTemplate = new RestTemplate();
         String resourceUrl = "http://localhost:8080/";
