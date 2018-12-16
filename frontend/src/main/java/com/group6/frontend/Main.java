@@ -39,7 +39,7 @@ public class Main extends Application {
 		scenes.put(GameScreen.FORM, new FormsTabView(stage).getScene());
 		scenes.put(GameScreen.LEADERBOARD, new LeaderBoardTabView(stage).getScene());
 		// Start with the main scene
-		stage.setScene(scenes.get(GameScreen.FORM));
+		stage.setScene(scenes.get(GameScreen.LEADERBOARD));
 
 		stage.show();
 	}
