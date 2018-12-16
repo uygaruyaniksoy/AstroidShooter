@@ -42,7 +42,7 @@ public class GameViewController extends Timer {
     private final List<Enemy> enemies = new ArrayList<>();
     private EnemySpawner enemySpawner;
     private int count;
-    private double time = 60.0;
+    private double time = 5.0;
 
     public GameViewController(Stage stage) {
         this.stage = stage;
@@ -69,7 +69,7 @@ public class GameViewController extends Timer {
         setPlayerShootingScheduler();
         initScoreTextAndTime();
 
-        player.setLevel(1);
+        player.setLevel(3);
 
         start(); // start timer so that every frame update function will be called
     }
@@ -354,14 +354,8 @@ public class GameViewController extends Timer {
 
         RestTemplate restTemplate = new RestTemplate();
         String resourceUrl = "http://localhost:8080/";
-        ResponseEntity response = restTemplate.exchange(
-                resourceUrl + "scoreboard/update", HttpMethod.POST, request, ResponseEntity.class);
-        if(response.getStatusCode() == HttpStatus.OK) {
-            System.out.println("updated correctly");
-        }
-        else {
-            System.out.println("updated erroneously");
-        }
+        restTemplate.exchange(
+                resourceUrl + "scoreboard/update", HttpMethod.POST, request, Void.class);
     }
 
     private void checkKill(GameObject gameObject, GameObject otherGameObject) {
