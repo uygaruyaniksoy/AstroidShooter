@@ -129,7 +129,7 @@ public class PlayerRestController {
 			return new ResponseEntity<>("Signed out",HttpStatus.OK);
 		}
 		else{
-			return new ResponseEntity<>("First sign in", HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<>("First sign in", HttpStatus.NO_CONTENT);
 		}
 	}
 

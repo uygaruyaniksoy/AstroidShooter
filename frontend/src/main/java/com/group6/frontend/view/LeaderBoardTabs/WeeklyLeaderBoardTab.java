@@ -55,6 +55,8 @@ public class WeeklyLeaderBoardTab {
         vbox.setSpacing(5);
         vbox.setPadding(new Insets(10, 0, 0, 10));
         vbox.getChildren().addAll(label, table);
+        Button button =  new Button("Back");
+
 
         tab.setContent(vbox);
 
