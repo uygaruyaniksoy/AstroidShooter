@@ -2,6 +2,7 @@ package com.group6.frontend.controller;
 
 import com.group6.frontend.Main;
 import com.group6.frontend.model.entities.webConsumer.LeaderBoardDTO;
+import com.group6.frontend.model.enums.GameScreen;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 import org.springframework.core.ParameterizedTypeReference;
@@ -29,12 +30,13 @@ public class LeaderBoardController {
         RestTemplate restTemplate = new RestTemplate();
 
         String resourceUrl = "http://localhost:8080/";
-        ResponseEntity<ArrayList<LeaderBoardDTO>> response = restTemplate.exchange(resourceUrl +path, HttpMethod.GET,request,
-                temp);
+        ResponseEntity<ArrayList<LeaderBoardDTO>> response = restTemplate.exchange(resourceUrl +path, HttpMethod.GET,request, temp);
 
         if(response.getStatusCode() == HttpStatus.OK) {
             ArrayList<LeaderBoardDTO> body = response.getBody();
-            if (body != null) {
+            if (body != null && body.size() >0) {
+                System.out.println("username:" + body.get(0).getNickName());
+                data.clear();
                 data.addAll(body);
             }
         }
@@ -42,6 +44,10 @@ public class LeaderBoardController {
 
         }
 
+    }
+
+    public void back() {
+        stage.setScene(Main.getScenes().get(GameScreen.MAIN_MENU));
     }
 
 

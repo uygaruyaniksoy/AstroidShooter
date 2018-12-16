@@ -4,22 +4,22 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LeaderBoardDTO {
-    private String username;
+    private String nickName;
     private int score;
 
     public LeaderBoardDTO() {}
 
     public LeaderBoardDTO(String username, int score) {
-        this.username = username;
+        this.nickName = username;
         this.score = score;
     }
 
-    public String getUsername() {
-        return username;
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setNickName(String username) {
+        this.nickName = username;
     }
 
     public int getScore() {
