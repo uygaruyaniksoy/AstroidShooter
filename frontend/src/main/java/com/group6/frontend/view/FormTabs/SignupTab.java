@@ -15,8 +15,8 @@ import javafx.scene.text.FontWeight;
 
 public class SignupTab {
 
-    private TabPane tabPane;
-    private SignupController controller;
+    private final TabPane tabPane;
+    private final SignupController controller;
 
     public SignupTab(TabPane tabPane, SignupController controller) {
         this.tabPane = tabPane;
@@ -105,12 +105,7 @@ public class SignupTab {
         GridPane.setHalignment(submitButton, HPos.CENTER);
         GridPane.setMargin(submitButton, new Insets(20, 0,20,0));
 
-        submitButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                controller.signupSubmitHandler(gridPane.getScene().getWindow(),nameField,passwordField,emailField);
-            }
-        });
+        submitButton.setOnMouseClicked(event -> controller.signupSubmitHandler(gridPane.getScene().getWindow(),nameField,passwordField,emailField));
     }
 
 

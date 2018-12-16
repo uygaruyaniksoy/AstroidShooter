@@ -1,6 +1,5 @@
 package com.group6.frontend.util;
 
-import com.group6.frontend.model.entities.GameObject;
 import com.group6.frontend.model.entities.PlayerSpaceship;
 import com.group6.frontend.model.entities.enemies.Enemy;
 import com.group6.frontend.model.entities.enemies.HeavyAttackEnemy;
@@ -9,8 +8,8 @@ import com.group6.frontend.model.entities.enemies.PassiveEnemy;
 import javafx.stage.Stage;
 
 public class EnemySpawner implements Spawner {
-    private Stage stage;
-    private PlayerSpaceship player;
+    private final Stage stage;
+    private final PlayerSpaceship player;
     private Scheduler spawnScheduler;
 
     public EnemySpawner(Stage stage, PlayerSpaceship player) {
@@ -45,9 +44,17 @@ public class EnemySpawner implements Spawner {
         return spawnScheduler;
     }
 
+    /**
+     * Spawns the enemies according to a mathematical formula so it will generate same enemies at the same locations every
+     * time you play so it's fair.
+     *
+     * @param t the time at you are querying the scheduler
+     * @param enemyType what kind of an enemy you want to instantiate
+     * @return created enemy, null if nothing is created
+     */
     @Override
     public Enemy checkAndSpawn(long t, Class enemyType) {
-        if ((Math.sin(t) - Math.min(Math.cos(t / 3. + Math.PI) * Math.sqrt(t), 0)) < 0) return null;
+        if ((Math.sin(t) - Math.min(Math.cos(t / 3. + Math.PI) * Math.sqrt(t / 10.), 0)) < 0) return null;
         try {
             return (Enemy) enemyType.getConstructor(Stage.class, double.class).newInstance(stage, getSpawnLocation(t));
         } catch (Exception e) {

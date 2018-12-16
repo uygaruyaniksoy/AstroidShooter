@@ -5,7 +5,9 @@ import com.group6.frontend.model.entities.Spaceship;
 import javafx.stage.Stage;
 
 public abstract class Enemy extends GameObject implements EnemyAI, Spaceship {
-    public Enemy(Stage stage, int health) {
+    double lastAttackTime;
+
+    Enemy(Stage stage, int health) {
         super(stage, health);
     }
 

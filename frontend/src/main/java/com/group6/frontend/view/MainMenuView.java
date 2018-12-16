@@ -1,7 +1,6 @@
 package com.group6.frontend.view;
 
 import com.group6.frontend.controller.MainMenuViewController;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -13,7 +12,7 @@ import javafx.stage.Stage;
 
 
 public class MainMenuView extends AbstractView {
-    private MainMenuViewController controller;
+    private final MainMenuViewController controller;
     public MainMenuView(Stage stage) {
         super(stage);
         controller = new MainMenuViewController(stage);
@@ -30,15 +29,15 @@ public class MainMenuView extends AbstractView {
 
         Button startButton = new Button("Start Game");
         vbox.getChildren().add(startButton);
-        startButton.addEventHandler(MouseEvent.MOUSE_CLICKED, controller::startGameHandler);
+        startButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event2 -> controller.startGameHandler());
 
         Button leaderboardButton = new Button("LeaderBoard");
         vbox.getChildren().add(leaderboardButton);
-        startButton.addEventHandler(MouseEvent.MOUSE_CLICKED, controller::openLaderBoardHandler);
+        leaderboardButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event1 -> controller.openLaderBoardHandler());
 
         Button signoutButton = new Button("Sign out");
         vbox.getChildren().add(signoutButton);
-        signoutButton.addEventHandler(MouseEvent.MOUSE_CLICKED, controller::signOutHandler);
+        signoutButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> controller.signOutHandler());
 
         // bind to take available space
         borderPane.prefHeightProperty().bind(scene.heightProperty());

@@ -5,9 +5,9 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public abstract class AbstractView implements IView {
-    protected Stage stage;
+    final Stage stage;
 
-    public AbstractView(Stage stage) {
+    AbstractView(Stage stage) {
         this.stage = stage;
     }
 

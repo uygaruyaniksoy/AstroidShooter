@@ -12,9 +12,9 @@ import javafx.scene.text.Font;
 
 public class WeeklyLeaderBoardTab {
 
-    private ObservableList<LeaderBoardDTO> data ;
-    private TabPane tabPane;
-    private LeaderBoardController controller;
+    private final ObservableList<LeaderBoardDTO> data ;
+    private final TabPane tabPane;
+    private final LeaderBoardController controller;
 
     public WeeklyLeaderBoardTab(TabPane tabPane, LeaderBoardController controller) {
         this.tabPane = tabPane;
@@ -58,9 +58,7 @@ public class WeeklyLeaderBoardTab {
 
         tab.setContent(vbox);
 
-        tab.setOnSelectionChanged(e->{
-            controller.tabChangedHandler(data,"scoreboard/weekly");
-        });
+        tab.setOnSelectionChanged(e-> controller.tabChangedHandler(data,"scoreboard/weekly"));
 
         tabPane.getTabs().add(tab);
     }

@@ -2,29 +2,18 @@ package com.group6.frontend.view.LeaderBoardTabs;
 
 import com.group6.frontend.controller.LeaderBoardController;
 import com.group6.frontend.model.entities.webConsumer.LeaderBoardDTO;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.ComboBoxListCell;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.TableModelEvent;
-
 public class GeneralLeaderBoardTab {
-    private TabPane tabPane;
-    private LeaderBoardController controller;
-    private ObservableList<LeaderBoardDTO> data;
+    private final TabPane tabPane;
+    private final LeaderBoardController controller;
+    private final ObservableList<LeaderBoardDTO> data;
 
     public GeneralLeaderBoardTab(TabPane tabPane, LeaderBoardController controller) {
         this.tabPane = tabPane;

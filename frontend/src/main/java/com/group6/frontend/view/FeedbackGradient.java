@@ -9,12 +9,10 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class FeedbackGradient {
-    private final Stage stage;
     private final Pane pane;
-    private Rectangle gradient;
+    private final Rectangle gradient;
 
     public FeedbackGradient(Stage stage) {
-        this.stage = stage;
         this.pane = ((Pane) stage.getScene().getRoot());
 
         gradient = new Rectangle();

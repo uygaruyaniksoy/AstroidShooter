@@ -6,19 +6,19 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public abstract class GameObject implements IGameObject {
-    protected Stage stage;
-    protected Pane pane;
+    protected final Stage stage;
+    protected final Pane pane;
 
     // bullet source
     protected GameObject source;
 
-    protected int curHealth;
-    protected int maxHealth;
+    int curHealth;
+    final int maxHealth;
     protected int speed;
-    protected AttackType attackType;
-    protected Position position = new Position(0, 0);
+    private AttackType attackType;
+    protected final Position position = new Position(0, 0);
 
-    public GameObject(Stage stage, int health) {
+    protected GameObject(Stage stage, int health) {
         this.stage = stage;
         Pane pane = (Pane) this.stage.getScene().getRoot();
         this.pane = new Pane();
@@ -48,6 +48,10 @@ public abstract class GameObject implements IGameObject {
         return this.pane;
     }
 
+    /**
+     * checks if 2 objects colludes and delivers damage to each one of them if they are colliding
+     * @param gameObject the gameObject that will be checked.
+     */
     @Override
     public void intersect(GameObject gameObject) {
         if (gameObject.source == this || this.source == gameObject) return;
@@ -57,7 +61,7 @@ public abstract class GameObject implements IGameObject {
         if (this.source != null) this.dealDamage(this.getHealth());
     }
 
-    public int getHealth() {
+    private int getHealth() {
         return curHealth;
     }
 
@@ -65,15 +69,11 @@ public abstract class GameObject implements IGameObject {
         return maxHealth;
     }
 
-    public void setHealth(int curHealth) {
-        this.curHealth = curHealth;
-    }
-
     public boolean isDead() {
         return curHealth <= 0;
     }
 
-    public void dealDamage(int damage) {
+    private void dealDamage(int damage) {
         curHealth -= damage;
     }
 
@@ -89,7 +89,4 @@ public abstract class GameObject implements IGameObject {
         return attackType;
     }
 
-    public void setAttackType(AttackType attackType) {
-        this.attackType = attackType;
-    }
 }
