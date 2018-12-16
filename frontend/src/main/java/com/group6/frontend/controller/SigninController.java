@@ -1,18 +1,16 @@
 package com.group6.frontend.controller;
 
 import com.group6.frontend.Main;
-import com.group6.frontend.model.entities.webConsumer.PlayerSigninDTO;
-import com.group6.frontend.model.entities.webConsumer.PlayerSignupDTO;
+import com.group6.frontend.model.entities.webConsumer.PlayerAuthenticationDTO;
+import com.group6.frontend.model.entities.webConsumer.PlayerSignInDTO;
 import com.group6.frontend.model.enums.GameScreen;
 import com.group6.frontend.util.ShowAlert;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import org.springframework.http.*;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 public class SigninController {
@@ -27,33 +25,40 @@ public class SigninController {
         showAlertClass = new ShowAlert();
     }
 
-    public void signinSubmitHandler(GridPane gridPane,  PasswordField passwordField, TextField emailField) {
-        MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
-
+    public void signinSubmitHandler(Window window, PasswordField passwordField, TextField emailField) {
 
         if (emailField.getText().isEmpty()) {
-            showAlertClass.showAlert(Alert.AlertType.ERROR, gridPane.getScene().getWindow(), "Form Error!", "Please enter your email id");
+            showAlertClass.showAlert(Alert.AlertType.ERROR, window, "Form Error!", "Please enter your email id");
 
         }
         else if (passwordField.getText().isEmpty()) {
-            showAlertClass.showAlert(Alert.AlertType.ERROR, gridPane.getScene().getWindow(), "Form Error!", "Please enter a password");
+            showAlertClass.showAlert(Alert.AlertType.ERROR, window, "Form Error!", "Please enter a password");
 
-        } else {
+        }
+        else {
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
-            PlayerSigninDTO playerDTO = new PlayerSigninDTO(emailField.getText(),passwordField.getText());
-            HttpEntity<PlayerSigninDTO> request = new HttpEntity<>(playerDTO,headers);
+            PlayerSignInDTO playerDTO = new PlayerSignInDTO();
+            playerDTO.setEmail(emailField.getText());
+            playerDTO.setPassword(passwordField.getText());
+
+            HttpEntity<PlayerSignInDTO> request = new HttpEntity<>(playerDTO,headers);
 
             RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity response = restTemplate.postForEntity(
-                    resourceUrl+"player/sign_in", request , String.class);
+            ResponseEntity<PlayerAuthenticationDTO> response = restTemplate.exchange(
+                    resourceUrl+"player/sign_in",HttpMethod.POST ,request , PlayerAuthenticationDTO.class);
 
-            if(response.getStatusCode() == HttpStatus.OK) {
-                showAlertClass.showAlert(Alert.AlertType.CONFIRMATION, gridPane.getScene().getWindow(), "Authentication Successful!", "Welcome ");
+            if(response.getStatusCode() == HttpStatus.NO_CONTENT) {
+                showAlertClass.showAlert(Alert.AlertType.ERROR, window, "Form Error!", "Please enter your email and password correctly");
+            }
+            else if(response.getStatusCode() == HttpStatus.OK) {
+//                Main.TOKEN = response.getBody().getToken();
+                showAlertClass.showAlert(Alert.AlertType.CONFIRMATION, window, "Authentication Successful!", "Welcome ");
                 stage.setScene(Main.getScenes().get(GameScreen.MAIN_MENU));
             }
+
 
         }
     }

@@ -69,7 +69,6 @@ public class SigninTab {
 
         tab.setContent(gridPane);
         tabPane.getTabs().add(tab);
-
     }
 
     private void addUIControls(GridPane gridPane) {
@@ -111,7 +110,7 @@ public class SigninTab {
         submitButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                controller.signinSubmitHandler(gridPane,passwordField,emailField);
+                controller.signinSubmitHandler(gridPane.getScene().getWindow(),passwordField,emailField);
 
             }
         });

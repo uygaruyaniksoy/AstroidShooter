@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface AuthenticationRepository extends JpaRepository<Authentication,Integer> {
 
-    @Query(value = "select * from Authentication a where a.token = token",nativeQuery = true)
+    @Query(value = "select * from authentication a where a.token = token",nativeQuery = true)
     Optional<Authentication> getByToken(String token);
 }

@@ -3,7 +3,7 @@ package com.group6.frontend;
 import com.group6.frontend.model.enums.GameScreen;
 import com.group6.frontend.view.FormsTabView;
 import com.group6.frontend.view.GameView;
-import com.group6.frontend.view.LeaderBoardView;
+import com.group6.frontend.view.LeaderBoardTabView;
 import com.group6.frontend.view.MainMenuView;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -16,6 +16,8 @@ import java.util.*;
 
 @SpringBootApplication
 public class Main extends Application {
+
+    public static String TOKEN = null;
 
 	private ConfigurableApplicationContext context;
 
@@ -35,9 +37,9 @@ public class Main extends Application {
 		scenes.put(GameScreen.MAIN_MENU, new MainMenuView(stage).getScene());
 		scenes.put(GameScreen.GAME, new GameView(stage).getScene());
 		scenes.put(GameScreen.FORM, new FormsTabView(stage).getScene());
-		scenes.put(GameScreen.LEADERBOARD,new LeaderBoardView(stage).getScene());
+		scenes.put(GameScreen.LEADERBOARD, new LeaderBoardTabView(stage).getScene());
 		// Start with the main scene
-		stage.setScene(scenes.get(GameScreen.MAIN_MENU));
+		stage.setScene(scenes.get(GameScreen.FORM));
 
 		stage.show();
 	}
@@ -47,7 +49,6 @@ public class Main extends Application {
 		return scenes;
 	}
 
-//
 
 	@Override
 	public void stop() throws Exception {

@@ -108,7 +108,7 @@ public class SignupTab {
         submitButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                controller.signupSubmitHandler(gridPane,nameField,passwordField,emailField);
+                controller.signupSubmitHandler(gridPane.getScene().getWindow(),nameField,passwordField,emailField);
             }
         });
     }

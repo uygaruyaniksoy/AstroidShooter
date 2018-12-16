@@ -1,10 +1,11 @@
 package com.group6.frontend.view;
 
 import com.group6.frontend.controller.MainMenuViewController;
-import javafx.geometry.Insets;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -15,7 +16,7 @@ public class MainMenuView extends AbstractView {
     private MainMenuViewController controller;
     public MainMenuView(Stage stage) {
         super(stage);
-        controller = new MainMenuViewController();
+        controller = new MainMenuViewController(stage);
     }
 
     @Override
@@ -29,9 +30,15 @@ public class MainMenuView extends AbstractView {
 
         Button startButton = new Button("Start Game");
         vbox.getChildren().add(startButton);
+        startButton.addEventHandler(MouseEvent.MOUSE_CLICKED, controller::startGameHandler);
 
         Button leaderboardButton = new Button("LeaderBoard");
         vbox.getChildren().add(leaderboardButton);
+        startButton.addEventHandler(MouseEvent.MOUSE_CLICKED, controller::openLaderBoardHandler);
+
+        Button signoutButton = new Button("Sign out");
+        vbox.getChildren().add(signoutButton);
+        signoutButton.addEventHandler(MouseEvent.MOUSE_CLICKED, controller::signOutHandler);
 
         // bind to take available space
         borderPane.prefHeightProperty().bind(scene.heightProperty());
@@ -42,7 +49,6 @@ public class MainMenuView extends AbstractView {
         Pane root = (Pane) scene.getRoot();
 
         root.getChildren().add(borderPane);
-
 
         return scene;
     }

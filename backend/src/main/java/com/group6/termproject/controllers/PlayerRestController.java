@@ -84,7 +84,7 @@ public class PlayerRestController {
 			authenticationRepository.save(new Authentication(playerLoginInfoHash, player));
 			return new ResponseEntity<>(playerAuthenticationDTO, HttpStatus.OK);
 		}
-		return new ResponseEntity<>((PlayerAuthenticationDTO) null, HttpStatus.UNAUTHORIZED);
+		return new ResponseEntity<>( (PlayerAuthenticationDTO) null, HttpStatus.UNAUTHORIZED);
 	}
 
 	/**

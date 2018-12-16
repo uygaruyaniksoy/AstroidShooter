@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -30,19 +31,18 @@ public class SignupController {
 //        stage.setScene(Main.getScenes().get(GameScreen.GAME));
 //    }
 
-    public void signupSubmitHandler(GridPane gridPane, TextField nameField, PasswordField passwordField, TextField emailField) {
-        MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
+    public void signupSubmitHandler(Window window, TextField nameField, PasswordField passwordField, TextField emailField) {
 
         if (nameField.getText().isEmpty()) {
-            showAlertClass.showAlert(Alert.AlertType.ERROR, gridPane.getScene().getWindow(), "Form Error!", "Please enter your name");
+            showAlertClass.showAlert(Alert.AlertType.ERROR, window, "Form Error!", "Please enter your name");
 
         }
         else if (emailField.getText().isEmpty()) {
-            showAlertClass.showAlert(Alert.AlertType.ERROR, gridPane.getScene().getWindow(), "Form Error!", "Please enter your email id");
+            showAlertClass.showAlert(Alert.AlertType.ERROR, window, "Form Error!", "Please enter your email id");
 
         }
         else if (passwordField.getText().isEmpty()) {
-            showAlertClass.showAlert(Alert.AlertType.ERROR, gridPane.getScene().getWindow(), "Form Error!", "Please enter a password");
+            showAlertClass.showAlert(Alert.AlertType.ERROR, window, "Form Error!", "Please enter a password");
 
         } else {
 
@@ -57,7 +57,7 @@ public class SignupController {
                     resourceUrl+"player/sign_up", request , String.class);
 
             if(response.getStatusCode() == HttpStatus.OK) {
-                showAlertClass.showAlert(Alert.AlertType.CONFIRMATION, gridPane.getScene().getWindow(), "Registration Successful!", "Welcome " + nameField.getText());
+                showAlertClass.showAlert(Alert.AlertType.CONFIRMATION, window, "Registration Successful!", "Welcome " + nameField.getText());
             }
 
         }
