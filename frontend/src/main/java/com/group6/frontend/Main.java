@@ -21,7 +21,7 @@ public class Main extends Application {
 
 	private ConfigurableApplicationContext context;
 
-	private static Map<GameScreen, Scene> scenes = new HashMap<>();
+	private static final Map<GameScreen, Scene> scenes = new HashMap<>();
 	private static Stack<GameScreen> history = new Stack<>();
 	private static Stage stage;
 
@@ -58,7 +58,7 @@ public class Main extends Application {
 
 
 	@Override
-	public void stop() throws Exception {
+	public void stop() {
 		context.close();
 	}
 
