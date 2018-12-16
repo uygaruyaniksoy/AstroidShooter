@@ -15,9 +15,8 @@ import org.springframework.web.client.RestTemplate;
 
 public class SigninController {
 
-    ShowAlert showAlertClass;
+    private final ShowAlert showAlertClass;
     private final Stage stage;
-    private final String resourceUrl = "http://localhost:8080/";
 
 
     public SigninController(Stage stage) {
@@ -46,8 +45,9 @@ public class SigninController {
             HttpEntity<PlayerSigninDTO> request = new HttpEntity<>(playerDTO,headers);
 
             RestTemplate restTemplate = new RestTemplate();
+            String resourceUrl = "http://localhost:8080/";
             ResponseEntity<PlayerAuthenticationDTO> response = restTemplate.exchange(
-                    resourceUrl+"player/sign_in",HttpMethod.POST ,request , PlayerAuthenticationDTO.class);
+                    resourceUrl +"player/sign_in",HttpMethod.POST ,request , PlayerAuthenticationDTO.class);
 
             if(response.getStatusCode() == HttpStatus.NO_CONTENT) {
                 showAlertClass.showAlert(Alert.AlertType.ERROR, window, "Form Error!", "Please enter your email and password correctly");

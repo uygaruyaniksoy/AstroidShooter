@@ -1,30 +1,22 @@
 package com.group6.frontend.controller;
 
-import com.group6.frontend.Main;
 import com.group6.frontend.model.entities.webConsumer.PlayerSignupDTO;
-import com.group6.frontend.model.enums.GameScreen;
 import com.group6.frontend.util.ShowAlert;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.springframework.http.*;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 public class SignupController {
-    ShowAlert showAlertClass;
-    private final String resourceUrl = "http://localhost:8080/";
-    private Stage stage;
+    private final ShowAlert showAlertClass;
 
 
     public SignupController(Stage stage) {
         showAlertClass = new ShowAlert();
-        this.stage = stage;
+        Stage stage1 = stage;
     }
 
 //    public void gameButtonHandler(MouseEvent mouseEvent) {
@@ -53,8 +45,9 @@ public class SignupController {
             HttpEntity<PlayerSignupDTO> request = new HttpEntity<>(playerDTO,headers);
 
             RestTemplate restTemplate = new RestTemplate();
+            String resourceUrl = "http://localhost:8080/";
             ResponseEntity response = restTemplate.postForEntity(
-                    resourceUrl+"player/sign_up", request , String.class);
+                    resourceUrl +"player/sign_up", request , String.class);
 
             if(response.getStatusCode() == HttpStatus.OK) {
                 showAlertClass.showAlert(Alert.AlertType.CONFIRMATION, window, "Registration Successful!", "Welcome " + nameField.getText());

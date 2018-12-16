@@ -1,7 +1,6 @@
 package com.group6.frontend.view.FormTabs;
 
 import com.group6.frontend.controller.SigninController;
-import com.group6.frontend.controller.SignupController;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -13,11 +12,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Stage;
 
 public class SigninTab {
-    private TabPane tabPane;
-    private SigninController controller;
+    private final TabPane tabPane;
+    private final SigninController controller;
 
     public SigninTab(TabPane tabPane, SigninController controller) {
         this.tabPane = tabPane;
@@ -96,12 +94,6 @@ public class SigninTab {
         GridPane.setHalignment(submitButton, HPos.CENTER);
         GridPane.setMargin(submitButton, new Insets(20, 0,20,0));
 
-        submitButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                controller.signinSubmitHandler(gridPane.getScene().getWindow(),passwordField,emailField);
-
-            }
-        });
+        submitButton.setOnMouseClicked(event -> controller.signinSubmitHandler(gridPane.getScene().getWindow(),passwordField,emailField));
     }
 }

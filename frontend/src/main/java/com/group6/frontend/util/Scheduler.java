@@ -20,5 +20,5 @@ public abstract class Scheduler extends AnimationTimer {
         execute();
     }
 
-    abstract public void execute();
+    protected abstract void execute();
 }

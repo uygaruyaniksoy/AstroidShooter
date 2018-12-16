@@ -1,12 +1,9 @@
 package com.group6.frontend.model.entities.ammos;
 
 import com.group6.frontend.model.entities.GameObject;
-import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class Rocket extends GameObject implements Ammunition {

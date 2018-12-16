@@ -18,5 +18,5 @@ public abstract class Timer extends AnimationTimer {
         update(timeElapsedSeconds);
     }
 
-    abstract public void update(double delta);
+    protected abstract void update(double delta);
 }

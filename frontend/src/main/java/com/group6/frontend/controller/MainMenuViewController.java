@@ -2,7 +2,6 @@ package com.group6.frontend.controller;
 import com.group6.frontend.Main;
 import com.group6.frontend.model.entities.webConsumer.PlayerSigninDTO;
 import com.group6.frontend.model.enums.GameScreen;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
@@ -11,7 +10,6 @@ import org.springframework.web.client.RestTemplate;
 public class MainMenuViewController {
 
     private final Stage stage;
-    private final String resourceUrl = "http://localhost:8080/";
 
 
     public MainMenuViewController(Stage stage) {
@@ -19,16 +17,16 @@ public class MainMenuViewController {
     }
 
 
-    public void startGameHandler(MouseEvent event) {
+    public void startGameHandler() {
         stage.setScene(Main.getScenes().get(GameScreen.GAME));
     }
 
 
-    public void openLaderBoardHandler(MouseEvent event) {
+    public void openLaderBoardHandler() {
         stage.setScene(Main.getScenes().get(GameScreen.LEADERBOARD));
     }
 
-    public void signOutHandler(MouseEvent event) {
+    public void signOutHandler() {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -37,7 +35,8 @@ public class MainMenuViewController {
         HttpEntity<PlayerSigninDTO> request = new HttpEntity<>(headers);
 
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity response = restTemplate.exchange(resourceUrl+"player/sign_out",HttpMethod.DELETE,request,String.class );
+        String resourceUrl = "http://localhost:8080/";
+        ResponseEntity response = restTemplate.exchange(resourceUrl +"player/sign_out",HttpMethod.DELETE,request,String.class );
 
         if(response.getStatusCode() == HttpStatus.OK) {
             Main.TOKEN = null;

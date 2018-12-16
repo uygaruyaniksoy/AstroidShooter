@@ -1,6 +1,5 @@
 package com.group6.frontend.util;
 
-import com.group6.frontend.model.entities.GameObject;
 import com.group6.frontend.model.entities.PlayerSpaceship;
 import com.group6.frontend.model.entities.enemies.Enemy;
 import com.group6.frontend.model.entities.enemies.HeavyAttackEnemy;
@@ -9,8 +8,8 @@ import com.group6.frontend.model.entities.enemies.PassiveEnemy;
 import javafx.stage.Stage;
 
 public class EnemySpawner implements Spawner {
-    private Stage stage;
-    private PlayerSpaceship player;
+    private final Stage stage;
+    private final PlayerSpaceship player;
     private Scheduler spawnScheduler;
 
     public EnemySpawner(Stage stage, PlayerSpaceship player) {

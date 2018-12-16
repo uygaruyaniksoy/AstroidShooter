@@ -2,17 +2,12 @@ package com.group6.frontend.model.entities.enemies;
 
 import com.group6.frontend.model.entities.GameObject;
 import com.group6.frontend.model.entities.Spaceship;
-import com.group6.frontend.model.enums.AttackType;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class PassiveEnemy extends Enemy implements Spaceship {
-    private int speed = -60;
 
     public PassiveEnemy(Stage stage, double spawnLocation) {
         super(stage, 10);
@@ -34,19 +29,15 @@ public class PassiveEnemy extends Enemy implements Spaceship {
     @Override
     public void update(double delta) {
         this.pane.setTranslateX(this.pane.getTranslateX());
+        int speed = -60;
         this.pane.setTranslateY(this.pane.getTranslateY() - speed * delta);
         position.setX(this.pane.getTranslateX());
         position.setY(this.pane.getTranslateY());
     }
 
     @Override
-    public GameObject attack(double x, double y, AttackType attackType) {
+    public GameObject attack() {
         return null;
-    }
-
-    @Override
-    public void updateAI() {
-
     }
 
     @Override

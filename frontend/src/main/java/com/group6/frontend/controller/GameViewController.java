@@ -6,7 +6,6 @@ import com.group6.frontend.model.entities.PlayerSpaceship;
 import com.group6.frontend.model.entities.ammos.Ammunition;
 import com.group6.frontend.model.entities.enemies.Enemy;
 import com.group6.frontend.model.entities.webConsumer.ScoreBoardDTO;
-import com.group6.frontend.model.enums.AttackType;
 import com.group6.frontend.model.enums.GameScreen;
 import com.group6.frontend.util.EnemySpawner;
 import com.group6.frontend.util.Scheduler;
@@ -32,17 +31,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameViewController extends Timer {
-    private Stage stage;
+    private final Stage stage;
     private Pane pane;
     private Pane healthbar;
     private Text score;
     private Text timeView;
 
-    private final String resourceUrl = "http://localhost:8080/";
-
     private PlayerSpaceship player;
-    private List<GameObject> gameObjects = new ArrayList<>();
-    private List<Enemy> enemies = new ArrayList<>();
+    private final List<GameObject> gameObjects = new ArrayList<>();
+    private final List<Enemy> enemies = new ArrayList<>();
     private EnemySpawner enemySpawner;
     private int count;
     private double time = 60.0;
@@ -51,14 +48,19 @@ public class GameViewController extends Timer {
         this.stage = stage;
     }
 
-    public void startGame(MouseEvent mouseEvent) {
+    /**
+     * set UI elements, init enemy spawner and player
+     *
+     * start level 1
+     */
+    public void startGame() {
         player = new PlayerSpaceship(stage);
         gameObjects.add(player);
 
         this.stage.getScene().onMouseMovedProperty().setValue(this::onMouseMoved);
         this.stage.getScene().onMouseDraggedProperty().setValue(this::onMouseDragged);
         this.stage.getScene().onMousePressedProperty().setValue(this::onMousePressed);
-        this.stage.getScene().onMouseReleasedProperty().setValue(this::onMouseReleased);
+        this.stage.getScene().onMouseReleasedProperty().setValue(mouseEvent1 -> onMouseReleased());
 
         this.pane = ((Pane) stage.getScene().getRoot());
 
@@ -97,13 +99,12 @@ public class GameViewController extends Timer {
     }
 
     private void setPlayerShootingScheduler() {
+        // set player to attack upwards every player.getShootRate() seconds.
         player.setShootScheduler(new Scheduler(player.getShootRate()) {
             @Override
             public void execute() {
                 gameObjects.add(player.attack(
-                        player.getPosition().getX(),
-                        player.getPosition().getY(),
-                        AttackType.LIGHT));
+                ));
             }
         });
         player.getShootScheduler().start();
@@ -126,7 +127,7 @@ public class GameViewController extends Timer {
         this.pane.getChildren().add(healthbar);
     }
 
-    private void onMouseReleased(MouseEvent mouseEvent) {
+    private void onMouseReleased() {
         if (player.isAutoShooting()) return;
         player.getShootScheduler().stop();
         player.setShootScheduler(null);
@@ -137,7 +138,7 @@ public class GameViewController extends Timer {
         player.setShootScheduler(new Scheduler(player.getShootRate()) {
             @Override
             public void execute() {
-                gameObjects.add(player.attack(mouseEvent.getX(), mouseEvent.getY(), AttackType.LIGHT));
+                gameObjects.add(player.attack());
             }
         });
         player.getShootScheduler().start();
@@ -151,6 +152,13 @@ public class GameViewController extends Timer {
         player.move(mouseEvent.getX(), mouseEvent.getY());
     }
 
+    /**
+     * every 0.5 seconds spawns enemies.
+     *
+     * after 25 player kill spawner starts to spawn 1 more enemy
+     * after 100 player kill spawner starts to spawn 1 more enemy
+     *
+     */
     private void startEnemySpawner() {
 
         enemySpawner = new EnemySpawner(stage, player);
@@ -184,6 +192,15 @@ public class GameViewController extends Timer {
         enemySpawner.getSpawnScheduler().start();
     }
 
+    /**
+     * update function runs every frame.
+     *
+     * it calculates new position of every element, checks if there is a collision among game objects and handles it,
+     *
+     * also updates gui and checks end game.
+     *
+     * @param delta time in seconds since the last update function run
+     */
     @Override
     public void update(double delta) {
         for (int i = 0; i < gameObjects.size(); i++) {
@@ -209,7 +226,7 @@ public class GameViewController extends Timer {
 
         for (Enemy enemy : enemies) {
             if (enemy.shouldAttack(count)) {
-                GameObject ammo = enemy.attack(enemy.getPosition().getX(), enemy.getPosition().getY() - 10, enemy.getAttackType());
+                GameObject ammo = enemy.attack();
                 if (ammo != null) gameObjects.add(ammo);
             }
         }
@@ -237,6 +254,9 @@ public class GameViewController extends Timer {
         }
     }
 
+    /**
+     * handle timer's timeout which is the end level.
+     */
     private void endLevel() {
         if (player.getLevel() == 3) {
             gameOver();
@@ -294,6 +314,11 @@ public class GameViewController extends Timer {
         this.pane.getChildren().add(nextLevel);
     }
 
+    /**
+     * handles game over
+     *
+     * stops all the timers and sends the score to the backend.
+     */
     private void gameOver() {
 
         player.getShootScheduler().stop();
@@ -328,6 +353,7 @@ public class GameViewController extends Timer {
         HttpEntity<ScoreBoardDTO> request = new HttpEntity<>(body, headers);
 
         RestTemplate restTemplate = new RestTemplate();
+        String resourceUrl = "http://localhost:8080/";
         restTemplate.exchange(
                 resourceUrl + "scoreboard/update", HttpMethod.POST, request, Void.class);
 
@@ -340,6 +366,11 @@ public class GameViewController extends Timer {
         }
     }
 
+    /**
+     * handles player death
+     *
+     * clears all the timers and guis and prompts to go back to main menu
+     */
     private void finish() {
         player.getShootScheduler().stop();
         enemySpawner.getSpawnScheduler().stop();

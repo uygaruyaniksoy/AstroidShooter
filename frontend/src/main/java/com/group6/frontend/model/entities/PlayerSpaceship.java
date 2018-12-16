@@ -3,11 +3,7 @@ package com.group6.frontend.model.entities;
 import com.group6.frontend.model.entities.ammos.Ammunition;
 import com.group6.frontend.model.entities.ammos.Rocket;
 import com.group6.frontend.model.entities.enemies.Enemy;
-import com.group6.frontend.model.entities.enemies.EnemyAI;
-import com.group6.frontend.model.enums.AttackType;
-import com.group6.frontend.util.Position;
 import com.group6.frontend.util.Scheduler;
-import com.group6.frontend.util.Timer;
 import com.group6.frontend.view.FeedbackGradient;
 import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
@@ -21,20 +17,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class PlayerSpaceship extends GameObject implements Spaceship {
-    private int speed = 10;
-    private double shootRate = 0.2;
     private Scheduler shootScheduler;
     private double moveTargetX;
     private double moveTargetY;
     private double score;
     private double killCount;
     private double level;
-    private boolean autoShooting = true;
 
     private Pane healthBar;
     private FeedbackGradient gradient;
@@ -74,6 +65,9 @@ public class PlayerSpaceship extends GameObject implements Spaceship {
         redshift();
     }
 
+    /**
+     * gui shifts to a red color and back to transparent in 1 second
+     */
     private void redshift() {
         PlayerSpaceship that = this;
         new Scheduler(0.01) {
@@ -101,6 +95,9 @@ public class PlayerSpaceship extends GameObject implements Spaceship {
         }.start();
     }
 
+    /**
+     * shakes the stage for 1 second
+     */
     private void shake() {
         PlayerSpaceship that = this;
         new Scheduler(0.01) {
@@ -141,8 +138,9 @@ public class PlayerSpaceship extends GameObject implements Spaceship {
         double fromX = this.pane.getTranslateX();
         double fromY = this.pane.getTranslateY();
 
-        double newX = fromX + (moveTargetX - fromX) * this.speed * delta;
-        double newY = fromY + (moveTargetY - fromY) * this.speed * delta;
+        int speed = 10;
+        double newX = fromX + (moveTargetX - fromX) * speed * delta;
+        double newY = fromY + (moveTargetY - fromY) * speed * delta;
 
         position.setX(newX);
         position.setY(newY);
@@ -152,7 +150,7 @@ public class PlayerSpaceship extends GameObject implements Spaceship {
     }
 
     @Override
-    public GameObject attack(double x, double y, AttackType attackType) {
+    public GameObject attack() {
         int centerX = 40;
         int centerY = 25;
         int bulletOffset = 30;
@@ -175,6 +173,7 @@ public class PlayerSpaceship extends GameObject implements Spaceship {
     }
 
     public double getShootRate() {
+        double shootRate = 0.2;
         return shootRate;
     }
 
@@ -208,6 +207,7 @@ public class PlayerSpaceship extends GameObject implements Spaceship {
     }
 
     public boolean isAutoShooting() {
+        boolean autoShooting = true;
         return autoShooting;
     }
 
