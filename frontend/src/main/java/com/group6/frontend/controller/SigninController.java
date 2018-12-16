@@ -2,7 +2,7 @@ package com.group6.frontend.controller;
 
 import com.group6.frontend.Main;
 import com.group6.frontend.model.entities.webConsumer.PlayerAuthenticationDTO;
-import com.group6.frontend.model.entities.webConsumer.PlayerSigninDTO;
+import com.group6.frontend.model.entities.webConsumer.PlayerSignInDTO;
 import com.group6.frontend.model.enums.GameScreen;
 import com.group6.frontend.util.ShowAlert;
 import javafx.scene.control.Alert;
@@ -38,11 +38,11 @@ public class SigninController {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
-            PlayerSigninDTO playerDTO = new PlayerSigninDTO();
+            PlayerSignInDTO playerDTO = new PlayerSignInDTO();
             playerDTO.setEmail(emailField.getText());
             playerDTO.setPassword(passwordField.getText());
 
-            HttpEntity<PlayerSigninDTO> request = new HttpEntity<>(playerDTO,headers);
+            HttpEntity<PlayerSignInDTO> request = new HttpEntity<>(playerDTO,headers);
 
             RestTemplate restTemplate = new RestTemplate();
             String resourceUrl = "http://localhost:8080/";
