@@ -14,6 +14,8 @@ import com.group6.frontend.util.StringResources;
 import com.group6.frontend.util.Timer;
 import javafx.geometry.Bounds;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -43,7 +45,7 @@ public class GameViewController extends Timer {
     private List<Enemy> enemies = new ArrayList<>();
     private EnemySpawner enemySpawner;
     private int count;
-    private double time = 5.0;
+    private double time = 60.0;
 
     public GameViewController(Stage stage) {
         this.stage = stage;
@@ -65,7 +67,7 @@ public class GameViewController extends Timer {
         setPlayerShootingScheduler();
         initScoreTextAndTime();
 
-        player.setLevel(3);
+        player.setLevel(1);
 
         start(); // start timer so that every frame update function will be called
     }
@@ -242,6 +244,12 @@ public class GameViewController extends Timer {
         }
         GameViewController that = this;
         this.pane.getChildren().removeIf(node -> node != that.player.getRootPane());
+
+        ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/space.jpg")));
+        image.fitWidthProperty().bind(stage.widthProperty());
+        image.fitHeightProperty().bind(stage.heightProperty());
+        pane.getChildren().add(0, image);
+
         enemies.clear();
         gameObjects.clear();
         gameObjects.add(player);
@@ -257,7 +265,7 @@ public class GameViewController extends Timer {
         text.setTextAlignment(TextAlignment.CENTER);
         text.setStrokeWidth(3);
         text.setStroke(Color.BLACK);
-        text.translateXProperty().bind(stage.widthProperty().divide(2).subtract(text.getLayoutBounds().getWidth()));
+        text.translateXProperty().bind(stage.widthProperty().divide(2).subtract(text.getLayoutBounds().getWidth() / 2));
         text.translateYProperty().bind(stage.heightProperty().divide(2).subtract(20));
 
         Button nextLevel = new Button("next level");
@@ -333,6 +341,8 @@ public class GameViewController extends Timer {
     }
 
     private void finish() {
+        player.getShootScheduler().stop();
+        enemySpawner.getSpawnScheduler().stop();
         // stop the timer and end the game
         stop();
 
