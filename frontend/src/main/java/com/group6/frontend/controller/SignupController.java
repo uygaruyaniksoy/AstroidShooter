@@ -52,6 +52,9 @@ public class SignupController {
             if(response.getStatusCode() == HttpStatus.OK) {
                 showAlertClass.showAlert(Alert.AlertType.CONFIRMATION, window, "Registration Successful!", "Welcome " + nameField.getText());
             }
+            else if(response.getStatusCode() == HttpStatus.NO_CONTENT) {
+                showAlertClass.showAlert(Alert.AlertType.ERROR, window, "Registration Failed!", "User already registered");
+            }
 
         }
     }
