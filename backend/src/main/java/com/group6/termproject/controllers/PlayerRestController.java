@@ -50,8 +50,10 @@ public class PlayerRestController {
 		String passwordHash = Base64.getEncoder().encodeToString(hash);
 
 		Optional<Player> optionalPlayer = playerRepository.findByEmail(playerDTO.getEmail());
+		Optional<Player> optionalPlayer2  = playerRepository.findByNickName(playerDTO.getNickName());
 
-		if (optionalPlayer.isPresent()) return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+		if (optionalPlayer.isPresent() || optionalPlayer2.isPresent()) return new ResponseEntity(HttpStatus.NO_CONTENT);
+
 
 		Player player = new Player(playerDTO.getNickName(), playerDTO.getEmail(), passwordHash);
 		playerRepository.save(player);
@@ -84,7 +86,8 @@ public class PlayerRestController {
 			authenticationRepository.save(new Authentication(playerLoginInfoHash, player));
 			return new ResponseEntity<>(playerAuthenticationDTO, HttpStatus.OK);
 		}
-		return new ResponseEntity<>( (PlayerAuthenticationDTO) null, HttpStatus.UNAUTHORIZED);
+
+		return new ResponseEntity<>( (PlayerAuthenticationDTO) null, HttpStatus.NO_CONTENT);
 	}
 
 	/**

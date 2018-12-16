@@ -39,7 +39,7 @@ public class LeaderBoardController {
             data.addAll(body);
         }
         else if(response.getStatusCode() == HttpStatus.NO_CONTENT) {
-            System.out.println("No value");
+
         }
 
     }

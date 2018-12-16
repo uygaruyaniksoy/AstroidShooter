@@ -58,6 +58,7 @@ public class SigninTab {
 
         tab.setContent(gridPane);
         tabPane.getTabs().add(tab);
+
     }
 
     private void addUIControls(GridPane gridPane) {
