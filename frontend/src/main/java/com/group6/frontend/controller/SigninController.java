@@ -54,6 +54,7 @@ public class SigninController {
             }
             else if(response.getStatusCode() == HttpStatus.OK) {
                 Main.TOKEN = response.getBody().getToken();
+                System.out.println("TOKEN: " + Main.TOKEN);
                 showAlertClass.showAlert(Alert.AlertType.CONFIRMATION, window, "Authentication Successful!", "Welcome ");
                 stage.setScene(Main.getScenes().get(GameScreen.MAIN_MENU));
             }

@@ -36,6 +36,8 @@ public class Main extends Application {
 		context = builder.run(getParameters().getRaw().toArray(new String[0]));
 	}
 
+
+
 	@Override
 	public void start(Stage stage) {
 		Main.stage = stage;

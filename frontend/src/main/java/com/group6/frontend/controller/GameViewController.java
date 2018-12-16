@@ -354,9 +354,14 @@ public class GameViewController extends Timer {
 
         RestTemplate restTemplate = new RestTemplate();
         String resourceUrl = "http://localhost:8080/";
-        restTemplate.exchange(
-                resourceUrl + "scoreboard/update", HttpMethod.POST, request, Void.class);
-
+        ResponseEntity response = restTemplate.exchange(
+                resourceUrl + "scoreboard/update", HttpMethod.POST, request, ResponseEntity.class);
+        if(response.getStatusCode() == HttpStatus.OK) {
+            System.out.println("updated correctly");
+        }
+        else {
+            System.out.println("updated erroneously");
+        }
     }
 
     private void checkKill(GameObject gameObject, GameObject otherGameObject) {
@@ -409,8 +414,6 @@ public class GameViewController extends Timer {
         });
         pane.getChildren().add(mainMenu);
 
-
-        System.out.println("fin");
 
         this.stage.getScene().onMouseMovedProperty().setValue(null);
         this.stage.getScene().onMouseDraggedProperty().setValue(null);

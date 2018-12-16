@@ -67,8 +67,6 @@ public class ScoreBoardController {
         else {
             return new ResponseEntity<>(res, HttpStatus.OK);
         }
-
-
     }
 
     /**

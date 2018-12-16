@@ -43,9 +43,6 @@ public class MainMenuViewController {
             stage.setScene(Main.getScenes().get(GameScreen.FORM));
         }
     }
-
-
-
 }
 
 

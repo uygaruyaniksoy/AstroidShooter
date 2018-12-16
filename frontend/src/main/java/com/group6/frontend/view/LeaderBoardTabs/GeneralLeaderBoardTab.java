@@ -27,44 +27,50 @@ public class GeneralLeaderBoardTab {
         tab.setText("Leader Board");
         tab.setClosable(false);
 
-        TableView table = new TableView();
-
-        final Label label = new Label("General Leader Board");
-        label.setFont(new Font("Arial", 20));
-        table.setEditable(false);
-
-        TableColumn usernameCol = new TableColumn("Username");
-        usernameCol.setMinWidth(100);
-
-        TableColumn scoreCol = new TableColumn("Score");
-        scoreCol.setMinWidth(100);
-
-        usernameCol.setCellValueFactory(
-                new PropertyValueFactory<LeaderBoardDTO,String>("Username")
-        );
-
-        scoreCol.setCellValueFactory(
-                new PropertyValueFactory<LeaderBoardDTO,String>("Score")
-        );
-
-        table.setItems(data);
-        table.getColumns().addAll(usernameCol, scoreCol);
-
-        final VBox vbox = new VBox();
-        vbox.setSpacing(5);
-        vbox.setPadding(new Insets(10, 0, 0, 10));
-        vbox.getChildren().addAll(label, table);
-
-        tab.setContent(vbox);
-
-
         tab.setOnSelectionChanged(e->{
+
+
+
+
             if(tab.isSelected()) {
                 controller.tabChangedHandler(data,"scoreboard/");
+                TableView table = new TableView();
+
+                final Label label = new Label("General Leader Board");
+                label.setFont(new Font("Arial", 20));
+                table.setEditable(false);
+
+                TableColumn usernameCol = new TableColumn("NickName");
+                usernameCol.setMinWidth(100);
+
+                TableColumn scoreCol = new TableColumn("Score");
+                scoreCol.setMinWidth(100);
+
+                usernameCol.setCellValueFactory(
+                        new PropertyValueFactory<LeaderBoardDTO,String>("NickName")
+                );
+
+                scoreCol.setCellValueFactory(
+                        new PropertyValueFactory<LeaderBoardDTO,String>("Score")
+                );
+
+                table.setItems(data);
+                table.getColumns().addAll(usernameCol, scoreCol);
+
+                final VBox vbox = new VBox();
+                vbox.setSpacing(5);
+                vbox.setPadding(new Insets(10, 0, 0, 10));
+                vbox.getChildren().addAll(label, table);
+
+                Button button =  new Button("Back");
+                button.setOnMouseClicked(mouseEvent -> {
+                    controller.back();
+                });
+                vbox.getChildren().add(button);
+
+                tab.setContent(vbox);
             }
         });
-
         tabPane.getTabs().add(tab);
     }
-
 }
