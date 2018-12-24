@@ -42,7 +42,7 @@ public class GameViewController extends Timer {
     private final List<Enemy> enemies = new ArrayList<>();
     private EnemySpawner enemySpawner;
     private int count;
-    private double time = 5.0;
+    private double time = 60.0;
 
     public GameViewController(Stage stage) {
         this.stage = stage;
@@ -69,7 +69,7 @@ public class GameViewController extends Timer {
         setPlayerShootingScheduler();
         initScoreTextAndTime();
 
-        player.setLevel(3);
+        player.setLevel(1);
 
         start(); // start timer so that every frame update function will be called
     }

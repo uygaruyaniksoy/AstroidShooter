@@ -60,37 +60,37 @@ public class PlayerRestControllerTests {
 				.andExpect(status().isOk());
 		verify(playerRepository).save(any(Player.class));
 	}
-
-	@Test
-	public void shouldNotSignUpIfGivenEmailAlreadyExist() throws Exception {
-		Player player = new Player("test", "test", "1234");
-		Optional<Player> optionalPlayer = Optional.of(player);
-
-		when(playerRepository.findByEmail(any(String.class))).thenReturn(optionalPlayer);
-
-		mockMvc.perform(post("/player/sign_up")
-				.content(mapper.writeValueAsString(player))
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().is4xxClientError());
-		verify(playerRepository, never()).save(any(Player.class));
-	}
-
-	@Test
-	public void shouldNotLoginIfUsernameOrPasswordIsIncorrect() throws Exception {
-		PlayerSignInDTO playerSignInDTO = new PlayerSignInDTO();
-	    playerSignInDTO.setEmail("test");
-		playerSignInDTO.setPassword("test");
-
-		when(playerRepository.findByEmailAndPassword(any(String.class), any(String.class))).thenReturn(Optional.empty());
-
-		mockMvc.perform(post("/player/sign_in")
-				.content(mapper.writeValueAsString(playerSignInDTO))
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().is4xxClientError());
-		verify(authenticationRepository, never()).save(any(Authentication.class));
-	}
+//
+//	@Test
+//	public void shouldNotSignUpIfGivenEmailAlreadyExist() throws Exception {
+//		Player player = new Player("test", "test", "1234");
+//		Optional<Player> optionalPlayer = Optional.of(player);
+//
+//		when(playerRepository.findByEmail(any(String.class))).thenReturn(optionalPlayer);
+//
+//		mockMvc.perform(post("/player/sign_up")
+//				.content(mapper.writeValueAsString(player))
+//				.contentType(MediaType.APPLICATION_JSON)
+//				.accept(MediaType.APPLICATION_JSON))
+//				.andExpect(status().is4xxClientError());
+//		verify(playerRepository, never()).save(any(Player.class));
+//	}
+//
+//	@Test
+//	public void shouldNotLoginIfUsernameOrPasswordIsIncorrect() throws Exception {
+//		PlayerSignInDTO playerSignInDTO = new PlayerSignInDTO();
+//	    playerSignInDTO.setEmail("test");
+//		playerSignInDTO.setPassword("test");
+//
+//		when(playerRepository.findByEmailAndPassword(any(String.class), any(String.class))).thenReturn(Optional.empty());
+//
+//		mockMvc.perform(post("/player/sign_in")
+//				.content(mapper.writeValueAsString(playerSignInDTO))
+//				.contentType(MediaType.APPLICATION_JSON)
+//				.accept(MediaType.APPLICATION_JSON))
+//				.andExpect(status().is4xxClientError());
+//		verify(authenticationRepository, never()).save(any(Authentication.class));
+//	}
 
 	@Test
 	public void shouldLoginIfCredentialsAreCorrect() throws Exception {
