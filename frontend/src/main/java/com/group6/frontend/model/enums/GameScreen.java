@@ -4,5 +4,5 @@ public enum GameScreen {
     MAIN_MENU,
     LEADERBOARD,
     GAME,
-    FORM
+    MULTI_PLAYER, FORM
 }

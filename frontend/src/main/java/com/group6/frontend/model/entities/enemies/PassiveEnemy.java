@@ -15,6 +15,12 @@ public class PassiveEnemy extends Enemy implements Spaceship {
         this.pane.setTranslateY(-100);
     }
 
+    public PassiveEnemy(Stage stage, double x, double y) {
+        super(stage, 10);
+        this.pane.setTranslateX(x);
+        this.pane.setTranslateY(y);
+    }
+
     @Override
     public void draw() {
         ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/ships.png")));

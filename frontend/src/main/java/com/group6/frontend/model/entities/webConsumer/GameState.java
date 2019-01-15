@@ -1,6 +1,4 @@
-package com.group6.backendserver;
-
-import javafx.util.Pair;
+package com.group6.frontend.model.entities.webConsumer;
 
 import java.io.Serializable;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.group6.backendserver;
+package com.group6.frontend.model.entities.webConsumer;
 
 import javafx.util.Pair;
 

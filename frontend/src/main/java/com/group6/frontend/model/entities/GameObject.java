@@ -12,13 +12,18 @@ public abstract class GameObject implements IGameObject {
     // bullet source
     protected GameObject source;
 
+    int id;
+
     int curHealth;
     final int maxHealth;
     protected int speed;
     private AttackType attackType;
     protected final Position position = new Position(0, 0);
 
+    public static int ids = 0;
+
     protected GameObject(Stage stage, int health) {
+        this.id = ids++;
         this.stage = stage;
         Pane pane = (Pane) this.stage.getScene().getRoot();
         this.pane = new Pane();

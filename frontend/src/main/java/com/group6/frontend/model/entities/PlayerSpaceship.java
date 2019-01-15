@@ -173,8 +173,7 @@ public class PlayerSpaceship extends GameObject implements Spaceship {
     }
 
     public double getShootRate() {
-        double shootRate = 0.2;
-        return shootRate;
+        return 0.2;
     }
 
     public Background getHealthBar() {
