@@ -11,6 +11,7 @@ import com.group6.frontend.util.EnemySpawner;
 import com.group6.frontend.util.Scheduler;
 import com.group6.frontend.util.StringResources;
 import com.group6.frontend.util.Timer;
+import javafx.application.Platform;
 import javafx.geometry.Bounds;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -26,6 +27,9 @@ import javafx.stage.Stage;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.Socket;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +46,10 @@ public class GameViewController extends Timer {
     private final List<Enemy> enemies = new ArrayList<>();
     private EnemySpawner enemySpawner;
     private int count;
-    private double time = 60.0;
+    private double time = 5.0;
+
+    private String HOST = "localhost";
+    private int PORT = 5758;
 
     public GameViewController(Stage stage) {
         this.stage = stage;
@@ -69,7 +76,7 @@ public class GameViewController extends Timer {
         setPlayerShootingScheduler();
         initScoreTextAndTime();
 
-        player.setLevel(1);
+        player.setLevel(3);
 
         start(); // start timer so that every frame update function will be called
     }
@@ -342,20 +349,60 @@ public class GameViewController extends Timer {
             Main.resetGameView();
         });
 
-        pane.getChildren().add(mainMenu);
+        Text text2 = new Text("Wait to match someone to play Level 4.");
+        text2.setFont(Font.font("Verdana", FontWeight.BOLD,36));
+        text2.setFill(Color.DARKORCHID);
+        text2.setStrokeWidth(3);
+        text2.setStroke(Color.BLACK);
+        text2.translateXProperty().bind(stage.widthProperty().divide(2).subtract(text2.getLayoutBounds().getWidth() / 2));
+        text2.translateYProperty().bind(stage.heightProperty().divide(2).multiply(3));
+
+        // dont show mainmenu button instead wait for multiplayer connection.
+//        pane.getChildren().add(mainMenu);
         pane.getChildren().add(text);
+        pane.getChildren().add(text2);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("x-access-token",Main.TOKEN);
+        try {
+            Socket socket = new Socket(HOST, PORT);
 
-        ScoreBoardDTO body = new ScoreBoardDTO((int) player.getScore());
-        HttpEntity<ScoreBoardDTO> request = new HttpEntity<>(body, headers);
+            new Thread(() -> {
+                try {
+                    InputStream input = socket.getInputStream();
+                    byte[] buffer = new byte[5];
+                    int read = input.read(buffer);
 
-        RestTemplate restTemplate = new RestTemplate();
-        String resourceUrl = "http://localhost:8080/";
-        restTemplate.exchange(
-                resourceUrl + "scoreboard/update", HttpMethod.POST, request, Void.class);
+                    if (new String(buffer).equals("start") && read > 0) {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                stage.setScene(Main.getScenes().get(GameScreen.MULTI_PLAYER));
+                                Main.multiPlayerView.getController().startGame();
+                                Main.multiPlayerView.getController().setSocket(socket);
+                            }
+                        });
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }).start();
+
+            System.out.println("connected");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//        headers.set("x-access-token",Main.TOKEN);
+//
+//        ScoreBoardDTO body = new ScoreBoardDTO((int) player.getScore());
+//        HttpEntity<ScoreBoardDTO> request = new HttpEntity<>(body, headers);
+//
+//        RestTemplate restTemplate = new RestTemplate();
+//        String resourceUrl = "http://localhost:8080/";
+//        restTemplate.exchange(
+//                resourceUrl + "scoreboard/update", HttpMethod.POST, request, Void.class);
     }
 
     private void checkKill(GameObject gameObject, GameObject otherGameObject) {

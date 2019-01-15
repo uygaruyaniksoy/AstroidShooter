@@ -1,10 +1,7 @@
 package com.group6.frontend;
 
 import com.group6.frontend.model.enums.GameScreen;
-import com.group6.frontend.view.FormsTabView;
-import com.group6.frontend.view.GameView;
-import com.group6.frontend.view.LeaderBoardTabView;
-import com.group6.frontend.view.MainMenuView;
+import com.group6.frontend.view.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -25,6 +22,8 @@ public class Main extends Application {
 	private static Stack<GameScreen> history = new Stack<>();
 	private static Stage stage;
 
+	public static MultiPlayerView multiPlayerView;
+
 	public static void resetGameView() {
 		scenes.remove(GameScreen.GAME);
 		scenes.put(GameScreen.GAME, new GameView(stage).getScene());
@@ -41,10 +40,12 @@ public class Main extends Application {
 	@Override
 	public void start(Stage stage) {
 		Main.stage = stage;
+		multiPlayerView = new MultiPlayerView(stage);
 
 		// Create and store all scenes up front
 		scenes.put(GameScreen.MAIN_MENU, new MainMenuView(stage).getScene());
 		scenes.put(GameScreen.GAME, new GameView(stage).getScene());
+		scenes.put(GameScreen.MULTI_PLAYER, multiPlayerView.getScene());
 		scenes.put(GameScreen.FORM, new FormsTabView(stage).getScene());
 		scenes.put(GameScreen.LEADERBOARD, new LeaderBoardTabView(stage).getScene());
 		// Start with the main scene
