@@ -5,6 +5,7 @@ import com.group6.frontend.model.entities.GameObject;
 import com.group6.frontend.model.entities.PlayerSpaceship;
 import com.group6.frontend.model.entities.RivalSpaceship;
 import com.group6.frontend.model.entities.ammos.Ammunition;
+import com.group6.frontend.model.entities.enemies.BossEnemy;
 import com.group6.frontend.model.entities.enemies.Enemy;
 import com.group6.frontend.model.entities.enemies.PassiveEnemy;
 import com.group6.frontend.model.enums.GameScreen;
@@ -212,23 +213,26 @@ public class MultiPlayerViewController extends Timer {
     private void startEnemySpawner() {
 
         for (int i = 0; i < 5; i++) {
-            PassiveEnemy enemy = new PassiveEnemy(stage, stage.getScene().getWidth() / 10 * 1, -50 * i);
+            PassiveEnemy enemy = new PassiveEnemy(stage, stage.getScene().getWidth() / 10 * 1, -50 * i - 100);
             gameObjects.add(enemy);
             enemies.add(enemy);
-            enemy = new PassiveEnemy(stage, stage.getScene().getWidth() / 10 * 3, -50 * i);
+            enemy = new PassiveEnemy(stage, stage.getScene().getWidth() / 10 * 3, -50 * i - 100);
             gameObjects.add(enemy);
             enemies.add(enemy);
-            enemy = new PassiveEnemy(stage, stage.getScene().getWidth() / 10 * 5, -50 * i);
+            enemy = new PassiveEnemy(stage, stage.getScene().getWidth() / 10 * 5, -50 * i - 100);
             gameObjects.add(enemy);
             enemies.add(enemy);
-            enemy = new PassiveEnemy(stage, stage.getScene().getWidth() / 10 * 7, -50 * i);
+            enemy = new PassiveEnemy(stage, stage.getScene().getWidth() / 10 * 7, -50 * i - 100);
             gameObjects.add(enemy);
             enemies.add(enemy);
-            enemy = new PassiveEnemy(stage, stage.getScene().getWidth() / 10 * 9, -50 * i);
+            enemy = new PassiveEnemy(stage, stage.getScene().getWidth() / 10 * 9, -50 * i - 100);
             gameObjects.add(enemy);
             enemies.add(enemy);
         }
 
+        BossEnemy enemy = new BossEnemy(stage, stage.getScene().getWidth() / 2);
+        gameObjects.add(enemy);
+        enemies.add(enemy);
     }
 
     /**
@@ -255,6 +259,8 @@ public class MultiPlayerViewController extends Timer {
                                 (otherGameObject instanceof Enemy && gameObject instanceof Ammunition && gameObject.getSource() instanceof Enemy) ||
                                 (gameObject instanceof RivalSpaceship && otherGameObject instanceof Ammunition && otherGameObject.getSource() instanceof PlayerSpaceship) ||
                                 (gameObject instanceof PlayerSpaceship && otherGameObject instanceof Ammunition && otherGameObject.getSource() instanceof RivalSpaceship) ||
+                                (gameObject instanceof PlayerSpaceship && otherGameObject instanceof RivalSpaceship) ||
+                                (gameObject instanceof RivalSpaceship && otherGameObject instanceof PlayerSpaceship) ||
                                 (gameObject instanceof Enemy && otherGameObject instanceof Enemy))
                 ) {
                     gameObject.intersect(otherGameObject);
