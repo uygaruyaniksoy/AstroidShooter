@@ -48,7 +48,7 @@ public class GameViewController extends Timer {
     private int count;
     private double time = 60.0;
 
-    private String HOST = "localhost";
+    private String HOST = "144.122.71.144";
     private int PORT = 8082;
 
     public GameViewController(Stage stage) {

@@ -55,7 +55,7 @@ public class MultiPlayerViewController extends Timer {
     private final List<Enemy> enemies = new ArrayList<>();
     private double time = 60;
 
-    private String HOST = "localhost";
+    private String HOST = "144.122.71.144";
     private int PORT = 8080;
     private Socket socket;
 
