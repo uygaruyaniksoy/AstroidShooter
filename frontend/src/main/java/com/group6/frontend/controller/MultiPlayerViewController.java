@@ -8,6 +8,7 @@ import com.group6.frontend.model.entities.ammos.Ammunition;
 import com.group6.frontend.model.entities.enemies.BossEnemy;
 import com.group6.frontend.model.entities.enemies.Enemy;
 import com.group6.frontend.model.entities.enemies.PassiveEnemy;
+import com.group6.frontend.model.entities.webConsumer.ScoreBoardDTO;
 import com.group6.frontend.model.enums.GameScreen;
 import com.group6.frontend.util.Scheduler;
 import com.group6.frontend.util.StringResources;
@@ -25,6 +26,11 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -44,12 +50,13 @@ public class MultiPlayerViewController extends Timer {
 
     private PlayerSpaceship player;
     private RivalSpaceship rival;
+    private BossEnemy boss;
     private final List<GameObject> gameObjects = new ArrayList<>();
     private final List<Enemy> enemies = new ArrayList<>();
     private double time = 60;
 
     private String HOST = "localhost";
-    private int PORT = 5758;
+    private int PORT = 8080;
     private Socket socket;
 
     private ObjectOutputStream outputStream;
@@ -59,7 +66,7 @@ public class MultiPlayerViewController extends Timer {
         this.stage = stage;
     }
 
-    public void startGame() {
+    void startGame() {
         player = new PlayerSpaceship(stage);
         rival = new RivalSpaceship(stage);
         gameObjects.add(player);
@@ -107,14 +114,14 @@ public class MultiPlayerViewController extends Timer {
 
     private void receiveMessage() throws IOException, ClassNotFoundException {
         Pair<Double, Double> dto = (Pair<Double, Double>) inputStream.readObject();
-        System.out.println("received: " + dto);
+//        System.out.println("received: " + dto);
         rival.move(dto.getKey(), dto.getValue());
 //        System.out.println(""+ rival.getRootPane().getTranslateX() + " " + rival.getRootPane().getTranslateY());
     }
 
     private void sendMessage() throws IOException {
         Pair<Double, Double> dto = new Pair<>(player.getRootPane().getTranslateX(), player.getRootPane().getTranslateY());
-        System.out.println("sent " + dto.toString());
+//        System.out.println("sent " + dto.toString());
         outputStream.writeObject(dto);
     }
 
@@ -126,8 +133,8 @@ public class MultiPlayerViewController extends Timer {
         score.setStroke(Color.BLACK);
         score.setTextAlignment(TextAlignment.LEFT);
 
-        score.translateXProperty().set(20);
         score.translateYProperty().set(80);
+        score.translateXProperty().set(20);
         pane.getChildren().add(score);
 
         timeView = new Text("Score: " + time);
@@ -157,6 +164,8 @@ public class MultiPlayerViewController extends Timer {
             public void execute() {
                 gameObjects.add(rival.attack(
                 ));
+                gameObjects.add(boss.attack(
+                ));
             }
         });
         rival.getShootScheduler().start();
@@ -166,8 +175,8 @@ public class MultiPlayerViewController extends Timer {
         this.healthbar = new Pane();
         healthbar.setPrefWidth(25);
         healthbar.prefHeightProperty().bind(stage.heightProperty().divide(4));
-        healthbar.setTranslateX(25);
         healthbar.translateYProperty().bind(stage.heightProperty().divide(4).multiply(3).subtract(25));
+        healthbar.setTranslateX(25);
 
         healthbar.setBorder(new Border(
                 new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID,
@@ -231,6 +240,7 @@ public class MultiPlayerViewController extends Timer {
         }
 
         BossEnemy enemy = new BossEnemy(stage, stage.getScene().getWidth() / 2);
+        boss = enemy;
         gameObjects.add(enemy);
         enemies.add(enemy);
     }
@@ -248,10 +258,12 @@ public class MultiPlayerViewController extends Timer {
     public void update(double delta) {
         for (int i = 0; i < gameObjects.size(); i++) {
             GameObject gameObject = gameObjects.get(i);
+            if (gameObject == null) continue;
             gameObject.update(delta);
             for (int j = i + 1; j < gameObjects.size(); j++) {
                 GameObject otherGameObject = gameObjects.get(j);
-                if (gameObject
+                if (otherGameObject != null &&
+                    gameObject
                         .getRootPane()
                         .getBoundsInParent()
                         .intersects(otherGameObject.getRootPane().getBoundsInParent()) &&
@@ -273,10 +285,14 @@ public class MultiPlayerViewController extends Timer {
 
         for (int i = 0; i < gameObjects.size(); i++) {
             GameObject gameObject = gameObjects.get(i);
-            if (gameObject.isDead()) {
+            if (gameObject != null && gameObject.isDead()) {
                 gameObjects.remove(gameObject);
                 if (gameObject instanceof Enemy) enemies.remove(gameObject);
                 this.pane.getChildren().remove(gameObject.getRootPane());
+
+                if (gameObject instanceof BossEnemy) {
+                    endLevel();
+                }
                 i--;
             }
         }
@@ -315,7 +331,7 @@ public class MultiPlayerViewController extends Timer {
         rival.getShootScheduler().stop();
         stop();
 
-        Text text = new Text("Get ready for next level");
+        Text text = new Text("Game is over. Congrats!");
         text.setFont(Font.font("Verdana", FontWeight.BOLD, 36));
         text.setFill(Color.DARKORCHID);
         text.setTextAlignment(TextAlignment.CENTER);
@@ -325,6 +341,38 @@ public class MultiPlayerViewController extends Timer {
         text.translateYProperty().bind(stage.heightProperty().divide(2).subtract(20));
 
         this.pane.getChildren().add(text);
+
+        System.out.println("endd");
+
+        Button mainMenu = new Button("Main Menu");
+        Bounds bounds = mainMenu.getLayoutBounds();
+        mainMenu.translateXProperty().bind(stage.widthProperty().subtract(bounds.getWidth()).divide(2));
+        mainMenu.translateYProperty().bind(stage.heightProperty().divide(4).multiply(3));
+        mainMenu.setOnMouseClicked(e -> {
+            stage.setScene(Main.getScenes().get(GameScreen.MAIN_MENU));
+            Main.resetGameView();
+        });
+        pane.getChildren().add(mainMenu);
+
+        System.out.println("gfame");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("x-access-token",Main.TOKEN);
+
+        System.out.println("sakdsa");
+
+        ScoreBoardDTO body = new ScoreBoardDTO((int) player.getScore());
+        HttpEntity<ScoreBoardDTO> request = new HttpEntity<>(body, headers);
+
+        System.out.println("jdkzlsjsksajkl");
+
+        RestTemplate restTemplate = new RestTemplate();
+        String resourceUrl = "http://" + HOST + ":" + PORT + "/";
+        restTemplate.exchange(
+                resourceUrl + "scoreboard/update", HttpMethod.POST, request, Void.class);
+
+        System.out.println("klsdaklsa");
     }
 
     private void checkKill(GameObject gameObject, GameObject otherGameObject) {
@@ -384,7 +432,7 @@ public class MultiPlayerViewController extends Timer {
         this.stage.getScene().onMouseReleasedProperty().setValue(null);
     }
 
-    public void setSocket(Socket socket) {
+    void setSocket(Socket socket) {
         this.socket = socket;
         try {
             this.outputStream = new ObjectOutputStream(socket.getOutputStream());

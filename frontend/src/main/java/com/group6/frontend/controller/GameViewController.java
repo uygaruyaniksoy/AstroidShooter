@@ -49,7 +49,7 @@ public class GameViewController extends Timer {
     private double time = 5.0;
 
     private String HOST = "localhost";
-    private int PORT = 5758;
+    private int PORT = 8082;
 
     public GameViewController(Stage stage) {
         this.stage = stage;
@@ -332,7 +332,7 @@ public class GameViewController extends Timer {
         enemySpawner.getSpawnScheduler().stop();
         stop();
 
-        Text text = new Text("Game is over and you have won!!");
+        Text text = new Text("Game is over!!");
         text.setFont(Font.font("Verdana", FontWeight.BOLD,36));
         text.setFill(Color.DARKORCHID);
         text.setStrokeWidth(3);
@@ -372,13 +372,10 @@ public class GameViewController extends Timer {
                     int read = input.read(buffer);
 
                     if (new String(buffer).equals("start") && read > 0) {
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                stage.setScene(Main.getScenes().get(GameScreen.MULTI_PLAYER));
-                                Main.multiPlayerView.getController().startGame();
-                                Main.multiPlayerView.getController().setSocket(socket);
-                            }
+                        Platform.runLater(() -> {
+                            stage.setScene(Main.getScenes().get(GameScreen.MULTI_PLAYER));
+                            Main.multiPlayerView.getController().startGame();
+                            Main.multiPlayerView.getController().setSocket(socket);
                         });
                     }
                 } catch (IOException e) {

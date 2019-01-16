@@ -9,13 +9,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Server {
+class Server {
 
-    private static final int PORT = 5758;
+    private static final int PORT = 8082;
     private static final AtomicInteger sessionId = new AtomicInteger(0);
 
-    private List<ClientConnectionHandler> clients = new ArrayList<ClientConnectionHandler>();
-    private List<GameSession> gameSessions = new ArrayList<GameSession>();
+    private final List<ClientConnectionHandler> clients = new ArrayList<ClientConnectionHandler>();
 
     public static void main(String[] args) throws IOException {
         new Server().runServer();
@@ -25,14 +24,6 @@ public class Server {
         ServerSocket serverSocket = new ServerSocket(PORT);
         System.out.println("server up for connection");
 
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                broadcast();
-            }
-        }, 0, 16);
-
         while (true) {
             Socket socket = serverSocket.accept();
             System.out.println("connection received with session id " + sessionId.get());
@@ -40,9 +31,6 @@ public class Server {
             ClientConnectionHandler client = new ClientConnectionHandler(sessionId.getAndIncrement(), socket);
             ClientConnectionHandler lastClient = clients.size() > 0 ? clients.get(clients.size() - 1) : null;
             if (lastClient != null && !lastClient.hasRival()) {
-                GameSession gameSession = new GameSession(lastClient, client);
-                gameSessions.add(gameSession);
-
                 lastClient.setRival(client);
                 client.setRival(lastClient);
 
@@ -53,12 +41,6 @@ public class Server {
             }
             clients.add(client);
 
-        }
-    }
-
-    private void broadcast() {
-        for (GameSession session : gameSessions) {
-            session.sendGameStateToClients();
         }
     }
 

@@ -12,7 +12,7 @@ public class BossEnemy extends Enemy implements Spaceship {
     private int bulletShot;
 
     public BossEnemy(Stage stage, double spawnLocation) {
-        super(stage, 1000);
+        super(stage, 750);
         this.pane.setTranslateX(spawnLocation);
         this.pane.setTranslateY(-300);
     }
@@ -40,8 +40,8 @@ public class BossEnemy extends Enemy implements Spaceship {
     @Override
     public GameObject attack() {
         if (pane.getTranslateY() < 0) return null;
-        int centerX = 40;
-        int centerY = 25;
+        int centerX = 175;
+        int centerY = 125;
         int bulletOffset = 45;
 
         int gunIndex = (bulletShot++ % 2) * 2 - 1;
